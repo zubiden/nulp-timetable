@@ -1,8 +1,10 @@
 html, body {
     height: 100%;
+    overflow: hidden;
 }
 
 #App {
+    overflow-y: auto;
     background-color: var(--backgroundColor);
     width: 100%;
     height: 100%;

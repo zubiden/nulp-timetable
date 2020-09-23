@@ -21,13 +21,16 @@ class Timetable extends React.Component {
   render() {
     return (
       <div className="timetable-page">
-        <div className="back" onClick={() => setSearchParameters({institute: this.props.institute})}>🡠 Повернутися</div>
-        <div className="controls">
-            <TwoSideButton one="По чисельнику" two="По знаменнику" onSelect={side => this.setState({week: side==="one"? 1 : 2})}/>
-            <TwoSideButton one="I підгрупа" two="II підгрупа" onSelect={side => this.setState({subgroup: side === "one" ? 1 : 2})}/>
+        <div className="header">
+            <div className="back" onClick={() => setSearchParameters({institute: this.props.institute})}>🡠 Повернутися</div>
+            <div className="location">{this.props.institute+"/"+this.props.group}</div>
         </div>
-                {this.state.timetable.length === 0 && <div className="loading">Отримання даних з lpnu.ua</div>}
-                {this.state.timetable.length > 0 && <TimetableComponent elements={this.prepareTimetable()}/>}
+        <div className="controls">
+            <TwoSideButton one="I підгрупа" two="II підгрупа" onSelect={side => this.setState({subgroup: side === "one" ? 1 : 2})}/>
+            <TwoSideButton one="По чисельнику" two="По знаменнику" onSelect={side => this.setState({week: side === "one"? 1 : 2})}/>
+        </div>
+        {this.state.timetable.length === 0 && <div className="loading">Отримання даних з lpnu.ua</div>}
+        {this.state.timetable.length > 0 && <TimetableComponent elements={this.prepareTimetable()}/>}
         </div>
     )
   }

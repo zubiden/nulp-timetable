@@ -3,30 +3,63 @@
     flex-direction: column;
     padding: 10px;
 
-    .back {
-        cursor: pointer;
-        font-size: 20px;
-        font-weight: bold;
+    animation: fade-in 0.15s ease-in-out;
 
-        &:hover {
-            color: var(--textHoverColor);
+    .header {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        .back {
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+
+            &:hover {
+                color: var(--textHoverColor);
+            }
+        }
+
+        .location {
+            font-size: 20px;
+            font-weight: bold;
+
+            margin-left: 10px;
         }
     }
 
     .controls {
-        display: flex;
-        .two-side-button {
-            margin: 10px;
-            background-color: #DDDDDD;
-            padding: 5px;
-            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            .two-side-button {
+                margin: 10px;
+                background-color: #DDDDDD;
+                padding: 5px;
+                border-radius: 5px;
+            }
         }
-    }
 
     .timetable {
+        animation: fade-in 0.15s ease-in-out;
         .timetable-cell {
             background-color: var(--timetableCellColor);
             display: flex;
+
+            &.date {
+                min-height: 0;
+                display: inline-block;
+                text-align: center;
+
+                padding: 5px;
+                background-color: var(--timetableDateColor);
+                &:empty {
+                    visibility: hidden;
+                }
+            }
+
+            &.numeration {
+                padding: 5px;
+                background-color: var(--timetableNumerationColor);
+            }
 
             .lesson {
                 width: 100%;
