@@ -1,0 +1,7 @@
+.category-button {
+	cursor: pointer;
+	.category-contents {
+		display: flex;
+		flex-direction: column;
+	}
+}

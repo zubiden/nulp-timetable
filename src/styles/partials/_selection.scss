@@ -1,0 +1,76 @@
+.institute-selection, .group-selection {
+    padding: 10px;
+    .loading {
+        font-size: 20px;
+        text-align: center;
+        grid-column: 1/3;
+    }
+}
+
+.institute-selection {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+
+    grid-gap: 10px;
+
+    .parameter-button {
+        min-width: 50px;
+        min-height: 50px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border: 1px solid black;
+
+        transition: background-color 0.15s ease-in-out;
+        &:hover {
+            background-color: var(--hoverColor);
+        }
+
+        .parameter-button-text {
+            font-size: 20px;
+            font-weight: bold;
+        }
+    } 
+}
+
+.group-selection {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+
+    .back {
+        cursor: pointer;
+        font-size: 20px;
+        font-weight: bold;
+
+        &:hover {
+            color: var(--textHoverColor);
+        }
+    }
+    
+    .category-button {
+        margin: 10px 0;
+        .category-button-text {
+            .icon {
+                font-size: 14px;
+            }
+
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .category-contents {
+            padding-left: 20px;
+
+            .parameter-button {
+                margin: 5px 0;
+                .parameter-button-text {
+                    font-weight: 16px;
+                }
+            }
+        }
+    }
+}

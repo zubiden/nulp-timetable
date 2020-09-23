@@ -1,0 +1,33 @@
+#App {
+    background-color: var(--backgroundColor)
+}
+
+
+.grid-center {
+    display: grid;
+    place-items: center;
+}
+
+.flex-grow {
+    flex-grow: 1;
+}
+
+.flex-shrink {
+    flex-shrink: 1;
+}
+
+a, a:hover, a:visited, a:active {
+    color: var(--linkColor);
+}
+
+.mobile-only {
+    @include desktop {
+        display: none;
+    }
+}
+
+.desktop-only {
+    @include mobile {
+        display: none;
+    }
+}

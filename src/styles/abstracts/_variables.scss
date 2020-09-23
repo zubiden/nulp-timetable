@@ -1,0 +1,37 @@
+:root {
+    --textColor: black;
+    --textHoverColor: #454545;
+    --textSelectedColor: green;
+
+    --contrastTextColor: white;
+    --contrastHoverColor: #DDDDDD;
+
+    --hoverColor: rgba(0,0,0, 0.08);
+
+    --linkColor: blue;
+
+    --backgroundColor: #F6F6F6;
+
+    --timetableCellColor: #C4C9CC;
+    --timetableDateColor: #E8BC2C;
+    --timetableNumerationColor: #E8BC2C;
+
+    --timetableLectionColor: #1DA1F1;
+    --timetablePracticalColor: #FE8C27;
+    --timetableLabColor: #5723FD;
+    --timetableConsultationColor: #6CB859;
+
+}
+
+
+@mixin mobile {
+    @media only screen and (max-width: 991.98px) {
+        @content;
+    }
+}
+
+@mixin desktop {
+    @media (min-width: 992px) {
+        @content;
+    }
+}

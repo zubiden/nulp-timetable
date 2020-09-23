@@ -1,0 +1,18 @@
+.two-side-button {
+	display: flex;
+
+	.side-button {
+		cursor: pointer;
+        margin: 0 5px;
+        transition: color 0.15s ease-in-out;
+
+		&.selected {
+			color: var(--textSelectedColor);
+            cursor: default;
+		}
+
+        &:not(.selected):hover {
+            color: var(--textHoverColor);
+        }
+	}
+}

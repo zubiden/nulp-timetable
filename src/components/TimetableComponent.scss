@@ -1,0 +1,29 @@
+.timetable {
+    // don't forget about title and numeration
+    display: grid;
+    grid-template-columns: 30px repeat(5, 1fr);
+
+    &.has-saturday {
+        grid-template-columns: 30px repeat(6, 1fr);
+    }
+
+    .timetable-cell {
+        min-height: 75px;
+
+        border: 1px solid black;
+        margin: 0 -1px -1px 0;
+
+        &.date {
+            min-height: 25px;
+            text-align: center;
+            background-color: var(--timetableDateColor);
+            &:empty {
+                visibility: hidden;
+            }
+        }
+
+        &.numeration {
+            background-color: var(--timetableNumerationColor)
+        }
+    }
+}
