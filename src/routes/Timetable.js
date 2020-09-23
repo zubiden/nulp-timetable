@@ -1,5 +1,5 @@
 import React from 'react'
-import classNames from "classNames"
+import classNames from "classnames"
 
 import { getTimetable } from "../utils/parser"
 import {setSearchParameters} from "../utils/history"

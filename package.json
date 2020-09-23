@@ -14,7 +14,7 @@
     "sass": "node-sass src/styles/index.scss build/index.css --output-style compressed",
     "build": "npm run clean && npm run sass && npm run webpack",
     "lint": "eslint src config",
-    "dev": " webpack-dashboard -- webpack-dev-server --config config/webpack.config.dev.js",
+    "dev": "del-cli --force ./build && webpack-dashboard -- webpack-dev-server --config config/webpack.config.dev.js",
     "start": "serve -s build"
   },
   "repository": {
@@ -81,6 +81,7 @@
     ]
   },
   "devDependencies": {
+    "del-cli": "^3.0.1",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-import": "^2.22.0",
