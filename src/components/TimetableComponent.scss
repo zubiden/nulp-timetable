@@ -8,6 +8,10 @@
         grid-template-columns: auto repeat(6, 1fr);
     }
 
+    &.has-sunday {
+        grid-template-columns: auto repeat(7, 1fr);
+    }
+
     .timetable-cell {
         display: flex;
         min-height: 75px;

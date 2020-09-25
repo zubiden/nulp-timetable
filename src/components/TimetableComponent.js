@@ -14,7 +14,8 @@ const TimetableComponent = ({ elements }) => {
     return (
         <div className={classNames({
             timetable: true,
-            "has-saturday": sizes.days === 6
+            "has-saturday": sizes.days === 6,
+            "has-sunday": sizes.days === 7 // Не заздрю...
           })}>
         {makeTable(sizes, elements)}
     </div>
@@ -127,6 +128,8 @@ function getWeekday(number) {
             return "П'ятниця";
         case 6:
             return "Субота";
+        case 7:
+            return "Неділя";
         default:
             return "Не вдалося отримати день"
     }
@@ -140,7 +143,7 @@ function findSize(elements) {
         if (element.position > rows) rows = element.position;
     }
     return {
-        days: Math.min(days, 6),
+        days: Math.min(days, 7),
         rows
     }
 }

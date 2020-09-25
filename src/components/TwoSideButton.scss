@@ -1,13 +1,27 @@
 .two-side-button {
 	display: flex;
+    position: relative;
+
+    background-color: var(--contrastHoverColor);
+    border-radius: 20px;
+
+    .slider {
+        position: absolute;
+        height: 100%;
+
+        transition: left 0.15s ease-in-out,
+                    right 0.15s ease-in-out;
+        background-color: var(--contrastSelectedColor);
+        border-radius: 20px;
+    }
 
 	.side-button {
 		cursor: pointer;
-        margin: 0 5px;
+        padding: 5px 10px;
         transition: color 0.15s ease-in-out;
+        z-index: 1;
 
 		&.selected {
-			color: var(--textSelectedColor);
             cursor: default;
 		}
 
