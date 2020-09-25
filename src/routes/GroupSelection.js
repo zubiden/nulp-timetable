@@ -63,7 +63,7 @@ class GroupSelection extends React.Component {
 				);
 			}
 
-			categories.push(<CategoryButton key={category} text={category} contents={lists.map(list => <div className="subcategory">{list}</div>)}/>)
+			categories.push(<CategoryButton key={category} text={category} contents={lists.map((list, i) => <div key={i} className="subcategory">{list}</div>)}/>)
 		}
 		return categories;
 	}
