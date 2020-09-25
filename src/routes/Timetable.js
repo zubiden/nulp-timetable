@@ -55,14 +55,7 @@ class Timetable extends React.Component {
         return {
             day: el.day,
             position: el.number,
-            content: <div className={classNames({
-                lesson: true,
-                [el.type]: true
-            })}>
-                        <div className="subject">{el.subject}</div>
-                        <div className="lecturer">{el.lecturer}</div>
-                        <div className="location">{el.location}</div>
-                    </div>
+            lesson: el
         }
     });
   }

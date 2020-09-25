@@ -2,15 +2,76 @@
     // don't forget about title and numeration
     display: grid;
     grid-template-columns: auto repeat(5, 1fr);
+    background-color: var(--timetableCellColor);
 
     &.has-saturday {
         grid-template-columns: auto repeat(6, 1fr);
     }
 
     .timetable-cell {
+        display: flex;
         min-height: 75px;
 
         border: 1px solid black;
         margin: 0 -1px -1px 0;
+
+        &.date {
+            min-height: 0;
+            display: inline-block;
+            text-align: center;
+
+            padding: 5px;
+            background-color: var(--timetableDateColor);
+
+            &:empty {
+                visibility: hidden;
+            }
+        }
+
+        &.numeration {
+            padding: 5px;
+            background-color: var(--timetableNumerationColor);
+        }
+
+        .animation-wrapper {
+            display: flex;
+            width: 100%;
+            &.fade-in {
+                animation: fade-in 0.25s ease-in-out;
+            }
+
+            &.fade-out {
+                animation: fade-out 0.25s ease-in-out;
+            }
+        }
+
+        .lesson {
+            width: 100%;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 5px;
+
+            color: var(--contrastTextColor);
+
+            &.lection {
+                background-color: var(--timetableLectionColor);
+            }
+
+            &.practical {
+                background-color: var(--timetablePracticalColor);
+            }
+
+            &.lab {
+                background-color: var(--timetableLabColor);
+            }
+
+            &.consultation {
+                background-color: var(--consultationColor);
+            }
+        }
     }
 }
