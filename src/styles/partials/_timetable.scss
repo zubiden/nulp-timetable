@@ -37,4 +37,12 @@
             margin: 10px;
         }
     }
+
+    .timetable {
+        .timetable-cell {
+            @include mobile {
+                width: calc(100vw - 40px);
+            }
+        }
+    }
 }

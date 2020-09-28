@@ -1,3 +1,5 @@
+@import "src/styles/abstracts/variables";
+
 .timetable {
     // don't forget about title and numeration
     display: grid;
@@ -5,7 +7,8 @@
     background-color: black;
     grid-gap: 1px;
     border: 1px solid black;
-    
+
+    scroll-snap-type: x mandatory;
     overflow-x: auto;
 
     &.has-saturday {
@@ -16,15 +19,27 @@
         grid-template-columns: auto repeat(7, 1fr);
     }
 
+    @include mobile {
+        grid-template-columns: repeat(5, 1fr);
+
+        &.has-saturday {
+        grid-template-columns: repeat(6, 1fr);
+        }
+
+        &.has-sunday {
+            grid-template-columns: repeat(7, 1fr);
+        }
+    }
+
     .timetable-cell {
         display: flex;
         min-height: 75px;
 
+        scroll-snap-align: center;
         background-color: var(--timetableCellColor);
 
         &.date {
             min-height: 0;
-            display: inline-block;
             text-align: center;
 
             padding: 5px;
@@ -33,11 +48,26 @@
             &:empty {
                 visibility: hidden;
             }
+
+            .animation-wrapper {
+                display: inline;
+            }
+        }
+
+        &.empty {
+            min-height: 0;
+            background-color: var(--timetableNumerationColor);
         }
 
         &.numeration {
             padding: 5px;
             background-color: var(--timetableNumerationColor);
+        }
+
+        @include mobile {
+            &.empty, &.numeration {
+                display: none;
+            }
         }
 
         .animation-wrapper {

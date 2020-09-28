@@ -1,6 +1,7 @@
 import React from 'react'
 
 import classNames from "classnames";
+
 import "./TimetableComponent.scss";
 
 /*
@@ -15,7 +16,7 @@ const TimetableComponent = ({ elements }) => {
         <div className={classNames({
             timetable: true,
             "has-saturday": sizes.days === 6,
-            "has-sunday": sizes.days === 7 // Не заздрю...
+            "has-sunday": sizes.days === 7, // Не заздрю...
           })}>
         {makeTable(sizes, elements)}
     </div>
@@ -35,13 +36,14 @@ class TimetableCell extends React.Component {
     }
 
     render() {
-        const { date, numeration, lesson, children } = this.props;
+        const { date, numeration, lesson, empty, children } = this.props;
         const { fadeIn, fadeOut, prevLesson } = this.state;
         return (
             <div className={classNames({
                 "timetable-cell": true,
                 "date": date,
                 "numeration": numeration,
+                "empty": empty
             })}>
                 <div onAnimationEnd={this.onAnimationEnd} className={classNames({
                     "animation-wrapper": true,
@@ -96,7 +98,7 @@ function makeTable(size, elements) {
             // first row
             if (i === 0) {
                 if (j === 0) {
-                    cells.push(<TimetableCell date key="first"/>); // first cell always empty
+                    cells.push(<TimetableCell empty key="first"/>); // first cell always empty
                 } else {
                     const weekday = getWeekday(j);
                     cells.push(<TimetableCell date key={weekday}>{weekday}</TimetableCell>)

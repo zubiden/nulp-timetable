@@ -1,6 +1,7 @@
 import React from 'react'
 
 import classNames from "classnames"
+import {throttle} from "../utils/func"
 
 import "./TwoSideButton.scss"
 
@@ -44,6 +45,19 @@ class TwoSideButton extends React.Component {
 		this.setState({
 			sliderStyles: this._calculateSliderStyles(this.state.side),
 		})
+		window.addEventListener('resize', this.onResize())
+	}
+
+	componentWillUnmount() {
+		window.removeEventListener('resize', this.onResize())
+	}
+
+	onResize = () => {
+		return throttle(() => {
+			this.setState({
+				sliderStyles: this._calculateSliderStyles(this.state.side),
+			})
+		}, 250);
 	}
 
 	select(side) {
