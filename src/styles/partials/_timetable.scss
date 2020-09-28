@@ -31,7 +31,17 @@
 
     .controls {
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
+
+        @include mobile {
+            flex-wrap: wrap;
+        }
+
+        @include desktop {
+            .spreader {
+                flex-grow: 1;
+            }
+        }
 
         .two-side-button {
             margin: 10px;
@@ -41,7 +51,7 @@
     .timetable {
         .timetable-cell {
             @include mobile {
-                width: calc(100vw - 40px);
+                width: calc(100vw - 30px);
             }
         }
     }

@@ -29,6 +29,7 @@ class Timetable extends React.Component {
         </div>
         <div className="controls">
             <TwoSideButton one="I підгрупа" two="II підгрупа" default={this.state.subgroup === 1 ? "one" : "two"} onSelect={side => this.setState({subgroup: side === "one" ? 1 : 2})}/>
+            <div className="spreader"/>
             <TwoSideButton one="По чисельнику" two="По знаменнику" default={this.state.week === 1 ? "one" : "two"} onSelect={side => this.setState({week: side === "one"? 1 : 2})}/>
         </div>
         {this.state.timetable.length === 0 && <div className="loading">Отримання даних з lpnu.ua</div>}
