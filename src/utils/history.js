@@ -29,3 +29,13 @@ export function replaceHistoryState(newUrl) {
 	const path = url.pathname + url.search+url.hash;
 	HISTORY.replace(path, {})
 }
+
+export function getCurrentParameters() {
+	const url = new URL(window.location.href);
+	let result = {}
+	for(let entry of url.searchParams.entries()) {
+	    const [key, value] = entry;
+	    result[key] = value;
+	}
+	return result;
+}

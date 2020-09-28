@@ -2,7 +2,7 @@ import React from 'react'
 import classNames from "classnames"
 
 import { getTimetable } from "../utils/parser"
-import {setSearchParameters} from "../utils/history"
+import {setSearchParameters, getCurrentParameters} from "../utils/history"
 
 import TwoSideButton from "../components/TwoSideButton"
 import TimetableComponent from "../components/TimetableComponent"
@@ -11,10 +11,12 @@ class Timetable extends React.Component {
   constructor(props) {
     super(props);
 
+    const subgroup = Number.parseInt(getCurrentParameters().subgroup) || 1;
+
     this.state = {
       timetable: [],
       week: getWeek() % 2 === 1 ? 1 : 2,
-      subgroup: 1
+      subgroup: subgroup,
     }
   }
 
@@ -26,8 +28,8 @@ class Timetable extends React.Component {
             <div className="location">{this.props.institute+"/"+this.props.group}</div>
         </div>
         <div className="controls">
-            <TwoSideButton one="I підгрупа" two="II підгрупа" onSelect={side => this.setState({subgroup: side === "one" ? 1 : 2})}/>
-            <TwoSideButton one="По чисельнику" two="По знаменнику" onSelect={side => this.setState({week: side === "one"? 1 : 2})}/>
+            <TwoSideButton one="I підгрупа" two="II підгрупа" default={this.state.subgroup === 1 ? "one" : "two"} onSelect={side => this.setState({subgroup: side === "one" ? 1 : 2})}/>
+            <TwoSideButton one="По чисельнику" two="По знаменнику" default={this.state.week === 1 ? "one" : "two"} onSelect={side => this.setState({week: side === "one"? 1 : 2})}/>
         </div>
         {this.state.timetable.length === 0 && <div className="loading">Отримання даних з lpnu.ua</div>}
         {this.state.timetable.length > 0 && <TimetableComponent elements={this.prepareTimetable()}/>}

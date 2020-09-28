@@ -2,7 +2,11 @@
     // don't forget about title and numeration
     display: grid;
     grid-template-columns: auto repeat(5, 1fr);
-    background-color: var(--timetableCellColor);
+    background-color: black;
+    grid-gap: 1px;
+    border: 1px solid black;
+    
+    overflow-x: auto;
 
     &.has-saturday {
         grid-template-columns: auto repeat(6, 1fr);
@@ -16,8 +20,7 @@
         display: flex;
         min-height: 75px;
 
-        border: 1px solid black;
-        margin: 0 -1px -1px 0;
+        background-color: var(--timetableCellColor);
 
         &.date {
             min-height: 0;

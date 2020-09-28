@@ -10,7 +10,7 @@ class TwoSideButton extends React.Component {
 		super(props);
 
 		this.state = {
-			side: this.props.side ?? "one",
+			side: this.props.default ?? "one",
 			sliderStyles: {left: 0, right: "100%"}
 		}
 
