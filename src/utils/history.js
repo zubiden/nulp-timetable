@@ -39,3 +39,7 @@ export function getCurrentParameters() {
 	}
 	return result;
 }
+
+export function openInNewTab(url) {
+	window.open(url, "_black");
+}

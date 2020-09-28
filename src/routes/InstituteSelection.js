@@ -16,7 +16,7 @@ class InstituteSelection extends React.Component {
 		return (
 			<div className="institute-selection">
 				{this.state.institutes.length === 0 && <div className="loading">Отримання даних з lpnu.ua</div>}
-				{this.state.institutes.map(institute => <URLParameterButton key={institute} text={institute} parameter={{institute: institute}}/>)}
+				{this.state.institutes.map(institute => <URLParameterButton key={institute} text={institute} parameters={{institute: institute}}/>)}
 			</div>
 		)
 	}

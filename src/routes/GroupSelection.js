@@ -59,7 +59,7 @@ class GroupSelection extends React.Component {
 				lists.push(
 					groups
 					.filter(group => group.startsWith(subcategory))
-					.map(group => <URLParameterButton key={group} text={group} parameter={{group: group}}/>)
+					.map(group => <URLParameterButton key={group} text={group} parameters={{group: group}}/>)
 				);
 			}
 
