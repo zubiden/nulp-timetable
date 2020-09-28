@@ -101,7 +101,7 @@ function makeTable(size, elements) {
                     cells.push(<TimetableCell empty key="first"/>); // first cell always empty
                 } else {
                     const weekday = getWeekday(j);
-                    cells.push(<TimetableCell date key={weekday}>{weekday}</TimetableCell>)
+                    cells.push(<TimetableCell date key={weekday}><div className="date">{weekday}</div></TimetableCell>)
                 }
             } else {
                 if (j === 0) {

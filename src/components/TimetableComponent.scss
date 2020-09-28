@@ -10,7 +10,6 @@
 
     scroll-snap-type: x mandatory;
     overflow-x: auto;
-    overflow-y: none;
 
     &.has-saturday {
         grid-template-columns: auto repeat(6, 1fr);
@@ -40,8 +39,11 @@
         background-color: var(--timetableCellColor);
 
         &.date {
-            min-height: 0;
-            text-align: center;
+            min-height: 0px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
             padding: 5px;
             background-color: var(--timetableDateColor);
@@ -49,9 +51,8 @@
             &:empty {
                 visibility: hidden;
             }
-
             .animation-wrapper {
-                display: inline;
+                width: auto;
             }
         }
 

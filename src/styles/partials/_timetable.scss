@@ -1,6 +1,7 @@
 .timetable-page {
     display: flex;
     flex-direction: column;
+    height: 100%;
     padding: 15px;
 
     animation: fade-in 0.15s ease-in-out;
@@ -49,6 +50,9 @@
     }
 
     .timetable {
+        flex-grow: 1;
+        flex-shrink: 0;
+        margin: 10px 0;
         .timetable-cell {
             @include mobile {
                 width: calc(100vw - 30px);
