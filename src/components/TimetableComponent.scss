@@ -23,7 +23,7 @@
         grid-template-columns: repeat(5, 1fr);
 
         &.has-saturday {
-        grid-template-columns: repeat(6, 1fr);
+            grid-template-columns: repeat(6, 1fr);
         }
 
         &.has-sunday {
@@ -45,6 +45,7 @@
             align-items: center;
             justify-content: center;
 
+            position: sticky;
             padding: 5px;
             background-color: var(--timetableDateColor);
 

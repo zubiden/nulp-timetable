@@ -1,4 +1,4 @@
-const NULP = "https://lpnu.ua/";
+const NULP = "https://student.lpnu.ua/";
 const TIMETABLE_SUFFIX = "students_schedule";
 const PROXY = "https://playcraft.com.ua/proxy.php?url=";
 
@@ -19,20 +19,20 @@ export async function fetchHtml(params = {}) {
 
 export async function getInstitutes() {
 	return fetchHtml().then(html => {
-		const select = parseAndGetOne(html, "#edit-institutecode-selective");
+		const select = parseAndGetOne(html, "#edit-departmentparent-abbrname-selective");
 		return Array.from(select.children).map(child => child.value).filter(inst => inst !== "All").sort((a, b) => a.localeCompare(b));
 	})
 }
 
-export async function getGroups(institutecode_selective = "All") {
-	return fetchHtml({institutecode_selective}).then(html => {
-		const select = parseAndGetOne(html, "#edit-edugrupabr-selective");
+export async function getGroups(departmentparent_abbrname_selective = "All") {
+	return fetchHtml({departmentparent_abbrname_selective}).then(html => {
+		const select = parseAndGetOne(html, "#edit-studygroup-abbrname-selective");
 		return Array.from(select.children).map(child => child.value).filter(inst => inst !== "All").sort((a, b) => a.localeCompare(b));
 	})
 }
 
-export async function getTimetable(institutecode_selective = "All", edugrupabr_selective="All") {
-	return fetchHtml({institutecode_selective, edugrupabr_selective}).then(html => {
+export async function getTimetable(departmentparent_abbrname_selective = "All", studygroup_abbrname_selective="All") {
+	return fetchHtml({departmentparent_abbrname_selective, studygroup_abbrname_selective}).then(html => {
 		const content = parseAndGetOne(html, ".view-content");
 		const days = Array.from(content.children).map(parseDay).flat(1);
 		return days;

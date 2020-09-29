@@ -15,7 +15,7 @@ class Timetable extends React.Component {
 
     this.state = {
       timetable: [],
-      week: getWeek() % 2 === 1 ? 1 : 2,
+      week: getWeek() % 2 === 0 ? 1 : 2, // NULP doesn't like standardization
       subgroup: subgroup,
     }
   }
