@@ -51,11 +51,13 @@
 
     .timetable {
         flex-grow: 1;
-        flex-shrink: 0;
         margin: 10px 0;
+
+        overflow-y: auto;
+
         .timetable-cell {
             @include mobile {
-                width: calc(100vw - 30px);
+                width: calc(100vw - 30px - 20px); //padding + scrollbar
             }
         }
     }

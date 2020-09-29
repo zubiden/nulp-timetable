@@ -84,6 +84,7 @@ const LessonFragment = ({ lesson }) => {
                 lesson: true,
                 [lesson.type]: true
             })}>
+            <div className="number">{lesson.number}</div>
             <div className="subject">{lesson.subject}</div>
             <div className="lecturer">{lesson.lecturer}</div>
             <div className="location">{lesson.location}</div>

@@ -33,19 +33,17 @@
 
     .timetable-cell {
         display: flex;
-        min-height: 75px;
+        min-height: 80px;
 
         scroll-snap-align: center;
         background-color: var(--timetableCellColor);
 
         &.date {
-            min-height: 0px;
+            min-height: 20px;
 
             display: flex;
             align-items: center;
             justify-content: center;
-
-            position: sticky;
             padding: 5px;
             background-color: var(--timetableDateColor);
 
@@ -60,6 +58,16 @@
         &.empty {
             min-height: 0;
             background-color: var(--timetableNumerationColor);
+        }
+
+        &.empty, &.date {
+            position: sticky;
+            top: 0;
+
+            z-index: 1;
+
+            border-bottom: 1px solid black;
+            margin-bottom: -1px;
         }
 
         &.numeration {
@@ -94,6 +102,7 @@
             justify-content: center;
             text-align: center;
             padding: 5px;
+            position: relative;
 
             color: var(--contrastTextColor);
 
@@ -111,6 +120,19 @@
 
             &.consultation {
                 background-color: var(--consultationColor);
+            }
+
+            .number {
+                position: absolute;
+                top: 2px;
+                left: 2px;
+                color: var(--textColor);
+            }
+
+            @include desktop {
+                .number {
+                    display: none;
+                }
             }
 
             .url {
