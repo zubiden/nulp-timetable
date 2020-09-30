@@ -1,0 +1,8 @@
+{
+    "name": "NULP Timetable",
+    "short_name": "NULP Time",
+    "description": "Розклад для студентів",
+    "lang": "ua",
+    "start_url": "/",
+    "display": "standalone"
+}

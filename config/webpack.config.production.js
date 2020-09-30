@@ -1,19 +1,15 @@
 const config = require('./webpack.config.js')
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const TerserPlugin = require("terser-webpack-plugin");
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 config.mode = 'production'
 
 config.optimization = {
   splitChunks: {
     chunks: 'all'
-  }
+  },
+  minimize: true,
+  minimizer: [new TerserPlugin(), new OptimizeCSSAssetsPlugin({})],
 }
-
-config.plugins = config.plugins.concat([
-  new UglifyJsPlugin({
-    sourceMap: true,
-    extractComments: true
-  })
-])
 
 module.exports = config
