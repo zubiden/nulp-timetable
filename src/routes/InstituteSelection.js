@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {getInstitutes} from "../utils/parser"
+import TimetableManager from "../managers/TimetableManager"
 
 import URLParameterButton from "../components/URLParameterButton"
 
@@ -22,7 +22,7 @@ class InstituteSelection extends React.Component {
 	}
 
 	componentDidMount() {
-		getInstitutes().then(institutes => {
+		TimetableManager.getInstitutes().then(institutes => {
 			this.setState({
 				institutes
 			});

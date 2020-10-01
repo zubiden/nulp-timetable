@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {getGroups} from "../utils/parser"
+import TimetableManager from "../managers/TimetableManager"
 import {setSearchParameters} from "../utils/history"
 
 import URLParameterButton from "../components/URLParameterButton"
@@ -31,7 +31,7 @@ class GroupSelection extends React.Component {
 	}
 
 	componentDidMount() {
-		getGroups(this.props.institute).then(groups => {
+		TimetableManager.getGroups(this.props.institute).then(groups => {
 			const categories = new Set();
 			for(let group of groups) {
 				const category = group.split("-")[0];

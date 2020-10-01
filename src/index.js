@@ -4,12 +4,17 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { App } from './app'
 
+import TimetableManager from "./managers/TimetableManager"
+
 import './styles/index.scss'
 
-ReactDOM.render(
-    <App/>,
-    document.getElementById('App')
-)
+TimetableManager.init().then(() => {
+	ReactDOM.render(
+    	<App/>,
+    	document.getElementById('App')
+	)
+})
+
 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -20,3 +25,5 @@ if ('serviceWorker' in navigator) {
         });
     });
 }
+
+window.timetable = TimetableManager;

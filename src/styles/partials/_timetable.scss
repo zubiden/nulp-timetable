@@ -49,15 +49,24 @@
         }
     }
 
+    .loading, .error {
+        align-self: center;
+        font-size: 20px;
+    }
+
+    .error {
+        color: red;
+    }
+
     .timetable {
         flex-grow: 1;
         margin: 10px 0;
 
-        overflow-y: auto;
+        overflow-y: overlay;
 
         .timetable-cell {
             @include mobile {
-                width: calc(100vw - 30px - 20px); //padding + scrollbar
+                width: calc(100vw - 30px); //padding
             }
         }
     }

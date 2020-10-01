@@ -1,5 +1,3 @@
-import storage from "./storage"
-
 const NULP = "https://student.lpnu.ua/";
 const TIMETABLE_SUFFIX = "students_schedule";
 const PROXY = "https://playcraft.com.ua/proxy.php?url=";
@@ -20,34 +18,25 @@ export async function fetchHtml(params = {}) {
 }
 
 export async function getInstitutes() {
-	const cached = await storage.getItem("institutes");
-	if(cached) return cached;
 	return fetchHtml().then(html => {
 		const select = parseAndGetOne(html, "#edit-departmentparent-abbrname-selective");
 		const institutes = Array.from(select.children).map(child => child.value).filter(inst => inst !== "All").sort((a, b) => a.localeCompare(b));
-		storage.setItem("institutes", institutes);
 		return institutes;
 	})
 }
 
 export async function getGroups(departmentparent_abbrname_selective = "All") {
-	const cached = await storage.getItem("groups_"+departmentparent_abbrname_selective);
-	if(cached) return cached;
 	return fetchHtml({departmentparent_abbrname_selective}).then(html => {
 		const select = parseAndGetOne(html, "#edit-studygroup-abbrname-selective");
 		const groups = Array.from(select.children).map(child => child.value).filter(inst => inst !== "All").sort((a, b) => a.localeCompare(b));
-		storage.setItem("groups_"+departmentparent_abbrname_selective, groups);
 		return groups;
 	})
 }
 
 export async function getTimetable(departmentparent_abbrname_selective = "All", studygroup_abbrname_selective="All") {
-	const cached = await storage.getItem("timetable_"+departmentparent_abbrname_selective+"_"+studygroup_abbrname_selective);
-	if(cached) return cached;
 	return fetchHtml({departmentparent_abbrname_selective, studygroup_abbrname_selective}).then(html => {
 		const content = parseAndGetOne(html, ".view-content");
 		const days = Array.from(content.children).map(parseDay).flat(1);
-		storage.setItem("timetable_"+departmentparent_abbrname_selective+"_"+studygroup_abbrname_selective, days);
 		return days;
 	})
 }
@@ -197,3 +186,12 @@ function parseAndGetOne(html, css) {
 	const doc = parser.parseFromString(html, "text/html");
 	return doc.querySelector(css);
 }
+
+const parser = {
+	fetchHtml,
+	getInstitutes,
+	getGroups,
+	getTimetable
+}
+
+export default parser;
