@@ -46,7 +46,7 @@ class TimetableManager {
 		}
 
 		const timetable = await parser.getTimetable(institute, group);
-		this.timetables = this.timetables.filter(el => el.institute !== institute && el.group !== group))
+		this.timetables = this.timetables.filter(el => el.institute !== institute && el.group !== group)
 		this.timetables.push({
 			institute,
 			group,
