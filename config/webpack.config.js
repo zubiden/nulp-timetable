@@ -1,4 +1,5 @@
 const path = require('path')
+const webpack = require('webpack')
 
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
@@ -27,6 +28,9 @@ const config = {
     new CopyWebpackPlugin([
       { from: path.join(SRC_DIRECTORY, 'assets'), to: path.join(ROOT_DIRECTORY, 'build') }
     ]),
+    new webpack.DefinePlugin({
+        __PUBLIC_URL__: JSON.stringify(process.env.PUBLIC_URL || ""),
+    }),
     new WorkboxPlugin.GenerateSW({
        // these options encourage the ServiceWorkers to get in there fast
        // and not allow any straggling "old" SWs to hang around

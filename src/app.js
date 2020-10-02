@@ -1,13 +1,15 @@
 import React, { useState} from 'react'
 import {HISTORY} from "./utils/history"
 
+import {Router, Switch, Route} from "react-router"
+
 import InstituteSelection from './routes/InstituteSelection'
 import GroupSelection from './routes/GroupSelection'
 import Timetable from './routes/Timetable'
+import Settings from "./routes/Settings"
 
 const INSTITUTE_PARAM = "institute";
 const GROUP_PARAM = "group"
-
 
 function useForceUpdate() {
   const [value, setValue] = useState(0);
@@ -26,11 +28,29 @@ export const App = () => {
   const group = params.get(GROUP_PARAM);
 
   // TODO group selection without institute
+
+  let content = null;
   if (institute && group) {
-    return <Timetable institute={institute} group={group}/>
+    content = <Timetable institute={institute} group={group}/>
   } else if (institute) {
-    return <GroupSelection institute={institute}/>
+    content = <GroupSelection institute={institute}/>
   } else {
-    return <InstituteSelection/>
+    content = <InstituteSelection/>
   }
+
+  return (
+    <Router history={HISTORY}>
+        <Switch>
+            {/*<Route exact path={__PUBLIC_URL__+"/"}>
+                {content}
+            </Route>*/}
+            <Route path={__PUBLIC_URL__+"/settings"}>
+                <Settings/>
+            </Route>
+            <Route>
+                {content}
+            </Route>
+        </Switch>
+    </Router>
+  )
 }
