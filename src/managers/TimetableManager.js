@@ -10,11 +10,11 @@ class TimetableManager {
 		this.groups = (await storage.getItem("groups_"+ALL)) || [];
 		this.timetables = (await storage.getItem("cached_timetables")) || [];
 
-		if(!this.institutes) {
+		if(!this.institutes.length === 0) {
 			this.institutes = await this.getInstitutes();
 		}
 
-		if(!this.groups) {
+		if(this.groups.length === 0) {
 			this.groups = await this.getGroups();
 		}
 	}
@@ -57,7 +57,7 @@ class TimetableManager {
 		return timetable;
 	}
 
-	async getCachedTimetables() {
+	getCachedTimetables() {
 		return this.timetables;
 	}
 
