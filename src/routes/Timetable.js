@@ -22,21 +22,26 @@ class Timetable extends React.Component {
     }
 
     render() {
+    	const time = TimetableManager.getCachedTime(this.props.institute, this.props.group);
         return (
             <div className="timetable-page">
-        <div className="header">
-            <div className="back" onClick={() => setSearchParameters({institute: this.props.institute})}>🡠 Повернутися</div>
-            <div className="location">{this.props.institute+"/"+this.props.group}</div>
-        </div>
-        <div className="controls">
-            <TwoSideButton one="I підгрупа" two="II підгрупа" default={this.state.subgroup === 1 ? "one" : "two"} onSelect={side => this.setState({subgroup: side === "one" ? 1 : 2})}/>
-            <div className="spreader"/>
-            <TwoSideButton one="По чисельнику" two="По знаменнику" default={this.state.week === 1 ? "one" : "two"} onSelect={side => this.setState({week: side === "one"? 1 : 2})}/>
-        </div>
-        {this.state.timetable.length === 0 && !this.state.isError && <div className="loading">Отримання даних з lpnu.ua</div>}
-        {this.state.isError && <div className="error">Помилка при отриманні даних!</div>}
-        {this.state.timetable.length > 0 && <TimetableComponent elements={this.prepareTimetable()}/>}
-        </div>
+		        <div className="header">
+		            <div className="back" onClick={() => setSearchParameters({institute: this.props.institute})}>🡠 Повернутися</div>
+		            <div className="location">{this.props.institute+"/"+this.props.group}</div>
+		        </div>
+		        <div className="controls">
+		            <TwoSideButton one="I підгрупа" two="II підгрупа" default={this.state.subgroup === 1 ? "one" : "two"} onSelect={side => this.setState({subgroup: side === "one" ? 1 : 2})}/>
+		            <div className="spreader"/>
+		            <TwoSideButton one="По чисельнику" two="По знаменнику" default={this.state.week === 1 ? "one" : "two"} onSelect={side => this.setState({week: side === "one"? 1 : 2})}/>
+		        </div>
+		        {this.state.timetable.length === 0 && !this.state.isError && <div className="loading">Отримання даних з lpnu.ua</div>}
+		        {this.state.isError && <div className="error">Помилка при отриманні даних!</div>}
+		        {this.state.timetable.length > 0 && <TimetableComponent onReady={this.tryToScrollToCurrentDay} elements={this.prepareTimetable()}/>}
+		        <div className="timetable-footer">
+		        	<button className="reload" onClick={this.updateTimetable}>Оновити</button>
+		        	<div className="last-cached">{time ? ("Востаннє: "+new Date(time).toLocaleString()) : ""}</div>
+		        </div>
+	        </div>
         )
     }
 
@@ -69,6 +74,17 @@ class Timetable extends React.Component {
         });
     }
 
+    tryToScrollToCurrentDay = (el) => { // yeah, naming!
+    	const width = el.getBoundingClientRect().width;
+
+    	const currentDay = new Date().getDay(); // 0 - Sunday
+    	if(currentDay === 0) currentDay = 7;
+    	const inTimetable = this.getFilteredTimetable().some(el => el.day === currentDay);
+    	if(inTimetable) {
+    		el.scrollTo((currentDay-1)*width, 0);
+    	}
+    }
+
     // writing this at 4:50AM, refractor required
     testWeek(lesson) {
         if (this.state.week === 1 && lesson.isFirstWeek) return true;
@@ -80,6 +96,14 @@ class Timetable extends React.Component {
         if (this.state.subgroup === 1 && lesson.isFirstSubgroup) return true;
         if (this.state.subgroup === 2 && lesson.isSecondSubgroup) return true;
         return false;
+    }
+
+    updateTimetable = () => {
+    	TimetableManager.updateTimetable(this.props.institute, this.props.group).then(timetable => {
+    		this.setState({
+    			timetable
+    		})
+    	})
     }
 }
 

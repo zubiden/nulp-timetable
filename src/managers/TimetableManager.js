@@ -61,6 +61,11 @@ class TimetableManager {
 		return this.timetables;
 	}
 
+	getCachedTime(institute, group) {
+		const timetable = this.timetables.find(el => el.institute === institute && el.group === group);
+		return timetable?.time;
+	}
+
 	clearCache() {
 		storage.clear();
 		this.timetables = [];
@@ -69,7 +74,7 @@ class TimetableManager {
 	}
 
 	async updateTimetable(institute, group) {
-		this.getTimetable(institute, group, false);
+		return this.getTimetable(institute, group, false);
 	}
 }
 
