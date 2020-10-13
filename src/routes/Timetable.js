@@ -99,9 +99,16 @@ class Timetable extends React.Component {
     }
 
     updateTimetable = () => {
+    	this.setState({
+    		isError: false
+    	})
     	TimetableManager.updateTimetable(this.props.institute, this.props.group).then(timetable => {
     		this.setState({
     			timetable
+    		})
+    	}).catch(err => {
+    		this.setState({
+    			isError: true
     		})
     	})
     }

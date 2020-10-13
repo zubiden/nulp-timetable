@@ -76,6 +76,13 @@ class TimetableManager {
 	async updateTimetable(institute, group) {
 		return this.getTimetable(institute, group, false);
 	}
+
+	searchGroups(query) {
+		query = query.toLowerCase().replace("-", "");
+		return this.groups.filter(group => {
+			return group.toLowerCase().replace("-","").startsWith(query);
+		})
+	}
 }
 
 export default new TimetableManager();

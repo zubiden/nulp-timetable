@@ -13,7 +13,8 @@ class GroupSelection extends React.Component {
 
 		this.state = {
 			categories: [],
-			groups: []
+			groups: [],
+			isError: false
 		}
 	}
 
@@ -24,7 +25,8 @@ class GroupSelection extends React.Component {
 		            <div className="back" onClick={() => setSearchParameters({})}>🡠 Повернутися</div>
 		            <div className="location">{this.props.institute}</div>
 		        </div>
-				{this.state.groups.length === 0 && <div className="loading">Отримання даних з lpnu.ua</div>}
+				{this.state.groups.length === 0 && !this.state.isError && <div className="loading">Отримання даних з lpnu.ua</div>}
+				{this.state.isError && <div className="error">Помилка при отриманні даних!</div>}
 				{this.getCategories()}
 			</div>
 		)
@@ -42,6 +44,10 @@ class GroupSelection extends React.Component {
 				groups,
 				categories: Array.from(categories)
 			});
+		}).catch(err => {
+			this.setState({
+				isError: true
+			})
 		})
 	}
 
