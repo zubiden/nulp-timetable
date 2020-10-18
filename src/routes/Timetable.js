@@ -77,7 +77,7 @@ class Timetable extends React.Component {
     tryToScrollToCurrentDay = (el) => { // yeah, naming!
     	const width = el.getBoundingClientRect().width;
 
-    	const currentDay = new Date().getDay(); // 0 - Sunday
+    	let currentDay = new Date().getDay(); // 0 - Sunday
     	if(currentDay === 0) currentDay = 7;
     	const inTimetable = this.getFilteredTimetable().some(el => el.day === currentDay);
     	if(inTimetable) {
