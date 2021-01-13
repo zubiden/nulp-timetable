@@ -11,11 +11,11 @@ class TimetableManager {
 		this.timetables = (await storage.getItem("cached_timetables")) || [];
 
 		if(!this.institutes.length === 0) {
-			this.institutes = await this.getInstitutes();
+			this.institutes = /*await*/ this.getInstitutes(); // need to test...
 		}
 
 		if(this.groups.length === 0) {
-			this.groups = await this.getGroups();
+			this.groups = /*await*/ this.getGroups(); // need to test...
 		}
 	}
 
