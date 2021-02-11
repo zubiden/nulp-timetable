@@ -8,6 +8,14 @@ class TimetableManager {
 		this.groups = (await storage.getItem("groups")) || [];
 		this.timetables = (await storage.getItem("cached_timetables")) || [];
 
+		if(this.timetables.length > 0) {
+			let first = this.timetables[0];
+			if(first.institute) { // old cache, clearing...
+				console.log("Clearing old cache...");
+				this.clearCache();
+			}
+		}
+
 		if(!this.institutes.length === 0) {
 			console.log("Downloading institute list...");
 			this.institutes = await this.getInstitutes(); // need to test...
