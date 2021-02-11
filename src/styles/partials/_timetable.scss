@@ -25,6 +25,7 @@
         .location {
             font-size: 20px;
             font-weight: bold;
+            color: var(--textColor);
 
             margin-left: 10px;
         }
@@ -77,7 +78,8 @@
         align-items: center;
 
         .reload {
-            background-color: var(--contrastHoverColor);
+            background-color: var(--buttonActive);
+            color: var(--textColor);
             cursor: pointer;
             padding: 5px 10px;
             border-radius: 20px;
@@ -86,8 +88,10 @@
             margin: 5px;
             font-size: 14px;
 
+            transition: background-color 0.25s ease-in-out;
+
             &:hover {
-                background-color: var(--contrastSelectedColor); // TODO change design and variable named
+                background-color: var(--buttonNonActive);
             }
         }
 

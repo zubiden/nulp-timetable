@@ -49,7 +49,7 @@ class TwoSideButton extends React.Component {
 	}
 
 	componentWillUnmount() {
-		window.removeEventListener('resize', this.onResize())
+		//window.removeEventListener('resize', this.onResize())
 	}
 
 	onResize = () => {

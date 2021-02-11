@@ -43,3 +43,7 @@ export function getCurrentParameters() {
 export function openInNewTab(url) {
 	window.open(url, "_black");
 }
+
+export function getHash() {
+	return decodeURI(window.location.hash).substring(2); // #/Settings -> Settings
+}

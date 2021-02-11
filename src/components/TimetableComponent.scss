@@ -4,9 +4,10 @@
     // don't forget about title and numeration
     display: grid;
     grid-template-columns: auto repeat(5, 1fr);
-    background-color: black;
+    grid-template-rows: max-content;
+    background-color: var(--timetableBorderColor);
     grid-gap: 1px;
-    border: 1px solid black;
+    //border: 1px solid var(--textColor);
 
     scroll-snap-type: x mandatory;
     overflow-x: auto;
@@ -33,46 +34,46 @@
 
     .timetable-cell {
         display: flex;
-        min-height: 80px;
+        //font-size: 2.5vh;
 
         scroll-snap-align: center;
         background-color: var(--timetableCellColor);
 
         &.date {
             min-height: 20px;
-
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 5px;
-            background-color: var(--timetableDateColor);
+            border-bottom: var(--timetableOtherBorderColor) 2px solid;
+            margin-bottom: -1px;
 
             &:empty {
                 visibility: hidden;
             }
             .animation-wrapper {
                 width: auto;
+                min-height: 20px;
             }
         }
 
         &.empty {
             min-height: 0;
-            background-color: var(--timetableNumerationColor);
         }
 
         &.empty, &.date {
             position: sticky;
             top: 0;
+            color: var(--textColor);
 
             z-index: 1;
-
-            border-bottom: 1px solid black;
-            margin-bottom: -1px;
         }
 
         &.numeration {
             padding: 5px;
-            background-color: var(--timetableNumerationColor);
+            color: var(--textColor);
+            border-right: var(--timetableOtherBorderColor) 2px solid;
+            margin-right: -1px;
         }
 
         @include mobile {
@@ -81,9 +82,17 @@
             }
         }
 
+        &:first-child {
+            border-right: var(--timetableOtherBorderColor) 2px solid;
+            margin-right: -1px;
+            border-bottom: var(--timetableOtherBorderColor) 2px solid;
+            margin-bottom: -1px;
+        }
+
         .animation-wrapper {
             display: flex;
             width: 100%;
+            min-height: 60px;
             &.fade-in {
                 animation: fade-in 0.25s ease-in;
             }
@@ -98,28 +107,27 @@
 
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
-            text-align: center;
-            padding: 5px;
+            //text-align: center;
+            padding: 5px 5px 5px 10px;
             position: relative;
 
-            color: var(--contrastTextColor);
+            color: var(--textColor);
 
             &.lection {
-                background-color: var(--timetableLectionColor);
+                border-left: 10px solid var(--timetableLectionColor);
             }
 
             &.practical {
-                background-color: var(--timetablePracticalColor);
+                border-left: 10px solid var(--timetablePracticalColor);
             }
 
             &.lab {
-                background-color: var(--timetableLabColor);
+                border-left: 10px solid var(--timetableLabColor);
             }
 
             &.consultation {
-                background-color: var(--consultationColor);
+                border-left: 10px solid var(--consultationColor);
             }
 
             .number {

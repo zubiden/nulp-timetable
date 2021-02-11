@@ -1,9 +1,9 @@
 import React from 'react'
 
 import TimetableManager from "../managers/TimetableManager"
-import {setSearchParameters} from "../utils/history"
+import {HISTORY} from "../utils/history"
 
-import URLParameterButton from "../components/URLParameterButton"
+import RouteButton from "../components/RouteButton"
 import CategoryButton from "../components/CategoryButton"
 
 class GroupSelection extends React.Component {
@@ -22,7 +22,7 @@ class GroupSelection extends React.Component {
 		return (
 			<div className="group-selection">
 				<div className="header">
-		            <div className="back" onClick={() => setSearchParameters({})}>🡠 Повернутися</div>
+		            <RouteButton to="/" className="back" text="← Повернутися" />
 		            <div className="location">{this.props.institute}</div>
 		        </div>
 				{this.state.groups.length === 0 && !this.state.isError && <div className="loading">Отримання даних з lpnu.ua</div>}
@@ -33,7 +33,17 @@ class GroupSelection extends React.Component {
 	}
 
 	componentDidMount() {
-		TimetableManager.getGroups(this.props.institute).then(groups => {
+		this.fetchData(this.props.institute);
+	}
+
+	componentDidUpdate(prevProps) {
+		if (this.props.institute !== prevProps.institute) {
+		    this.fetchData(this.props.institute);
+		}
+	}
+
+	fetchData(institute) {
+		TimetableManager.getGroups(institute).then(groups => {
 			const categories = new Set();
 			for(let group of groups) {
 				const category = group.split("-")[0];
@@ -65,7 +75,7 @@ class GroupSelection extends React.Component {
 				lists.push(
 					groups
 					.filter(group => group.startsWith(subcategory))
-					.map(group => <URLParameterButton key={group} text={group} parameters={{group: group}}/>)
+					.map(group => <RouteButton to={`/${group}`} text={group} key={group} />)
 				);
 			}
 

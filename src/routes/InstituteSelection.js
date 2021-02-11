@@ -2,13 +2,13 @@ import React from 'react'
 
 import TimetableManager from "../managers/TimetableManager"
 
-import URLParameterButton from "../components/URLParameterButton"
+import RouteButton from "../components/RouteButton"
 
 import { SearchPanel , SearchPanelVariant} from "react-search-panel";
 
 import {throttle} from "../utils/func"
 
-import {setSearchParameters} from "../utils/history"
+import {HISTORY} from "../utils/history"
 
 class InstituteSelection extends React.Component {
 	constructor(props) {
@@ -36,7 +36,7 @@ class InstituteSelection extends React.Component {
 														float
 														width={"100%"}
 														maximumHeight={250}/>}
-				{this.state.institutes.map(institute => <URLParameterButton key={institute} text={institute} parameters={{institute: institute}}/>)}
+				{this.state.institutes.map(institute => <RouteButton to={`/${institute}`} text={institute} key={institute}/>)}
 			</div>
 		)
 	}
@@ -57,10 +57,9 @@ class InstituteSelection extends React.Component {
 		const selected = choices[0];
 		if(!selected) return;
 		const group = selected.key;
-		setSearchParameters({
-			institute: "All",
-			group: group
-		})
+		HISTORY.push({
+			hash: "/"+group
+		});
 	}
 }
 

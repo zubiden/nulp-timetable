@@ -39,10 +39,11 @@ class TimetableComponent extends React.Component {
                 // first row
                 if (i === 0) {
                     if (j === 0) {
-                        cells.push(<TimetableCell empty key="first"/>); // first cell always empty
+                        cells.push(<EmptyCell key="first"/>); // first cell always empty
                     } else {
                         const weekday = this.getWeekday(j);
-                        cells.push(<TimetableCell date key={weekday}><div className="date">{weekday}</div></TimetableCell>)
+                        cells.push(<DayCell weekday={weekday} key = {weekday}/>);
+                        //cells.push(<TimetableCell date key={weekday}><div className="date">{weekday}</div></TimetableCell>)
                     }
                 } else {
                     if (j === 0) {
@@ -92,6 +93,27 @@ class TimetableComponent extends React.Component {
     }
 }
 
+const EmptyCell = () => {
+    return (
+        <div className={classNames({
+                "timetable-cell": true,
+                "empty": true
+            })}>
+        </div>
+        )
+}
+
+const DayCell = ({weekday}) => {
+    return (
+        <div className={classNames({
+                "timetable-cell": true,
+                "date": true
+            })}>
+            <div className="date">{weekday}</div>
+        </div>
+        )
+}
+
 class TimetableCell extends React.Component {
 
     constructor(props) {
@@ -119,7 +141,7 @@ class TimetableCell extends React.Component {
                     "fade-in": fadeIn,
                     "fade-out": fadeOut
                 })}>
-                    {children /*TODO special cell type for date and numeration? */}
+                    {children}
                     <LessonFragment lesson={fadeOut ? prevLesson : lesson}/>
                 </div>
             </div>

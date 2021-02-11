@@ -2,8 +2,9 @@ import React from 'react'
 import classNames from "classnames"
 
 import TimetableManager from "../managers/TimetableManager"
-import { setSearchParameters, getCurrentParameters } from "../utils/history"
+import { HISTORY } from "../utils/history"
 
+import RouteButton from "../components/RouteButton"
 import TwoSideButton from "../components/TwoSideButton"
 import TimetableComponent from "../components/TimetableComponent"
 
@@ -11,7 +12,7 @@ class Timetable extends React.Component {
     constructor(props) {
         super(props);
 
-        const subgroup = Number.parseInt(getCurrentParameters().subgroup) || 1;
+        const subgroup = 1; // TODO pass subgroup in URL
 
         this.state = {
             timetable: [],
@@ -22,12 +23,12 @@ class Timetable extends React.Component {
     }
 
     render() {
-    	const time = TimetableManager.getCachedTime(this.props.institute, this.props.group);
+    	const time = TimetableManager.getCachedTime(this.props.group);
         return (
             <div className="timetable-page">
 		        <div className="header">
-		            <div className="back" onClick={() => setSearchParameters({institute: this.props.institute})}>🡠 Повернутися</div>
-		            <div className="location">{this.props.institute+"/"+this.props.group}</div>
+		            <RouteButton className="back" to="/" text="← Повернутися" />
+		            <div className="location">{this.props.group}</div>
 		        </div>
 		        <div className="controls">
 		            <TwoSideButton one="I підгрупа" two="II підгрупа" default={this.state.subgroup === 1 ? "one" : "two"} onSelect={side => this.setState({subgroup: side === "one" ? 1 : 2})}/>
@@ -46,7 +47,17 @@ class Timetable extends React.Component {
     }
 
     componentDidMount() {
-        TimetableManager.getTimetable(this.props.institute, this.props.group).then(timetable => {
+        this.fetchData(this.props.group)
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.group !== prevProps.group) {
+            this.fetchData(this.props.group)
+        }
+    }
+
+    fetchData(group) {
+        TimetableManager.getTimetable(group).then(timetable => {
             this.setState({
                 timetable
             })
@@ -102,7 +113,7 @@ class Timetable extends React.Component {
     	this.setState({
     		isError: false
     	})
-    	TimetableManager.updateTimetable(this.props.institute, this.props.group).then(timetable => {
+    	TimetableManager.updateTimetable(this.props.group).then(timetable => {
     		this.setState({
     			timetable
     		})

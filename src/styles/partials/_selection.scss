@@ -30,13 +30,22 @@
         align-self: center;
         position: relative;
 
+        form > div:first-child {
+            background-color: var(--searchBackgroundColor);
+            border: 1px solid var(--searchBackgroundColor);
+
+            input {
+                color: var(--textColor);
+            }
+        }
+
         #ResultContainer {
             width: 100%;
-            background-color: white;
 
             fieldset {
                 overflow-y: overlay;
                 overflow-x: hidden;
+                background-color: var(--searchBackgroundColor);
                 div {
                     margin: 6px 0;
                     width: 100%;
@@ -52,7 +61,7 @@
         }
     }
 
-    .parameter-button {
+    .route-button {
         min-width: 50px;
         min-height: 50px;
 
@@ -60,7 +69,7 @@
         align-items: center;
         justify-content: center;
 
-        border: 1px solid black;
+        border: 1px solid var(--textHoverColor);
 
         animation: fade-in 0.15s ease-in-out;
         transition: background-color 0.15s ease-in-out;
@@ -69,7 +78,7 @@
             background-color: var(--hoverColor);
         }
 
-        .parameter-button-text {
+        .route-button-text {
             font-size: 20px;
             font-weight: bold;
         }
@@ -100,6 +109,7 @@
         .location {
             font-size: 20px;
             font-weight: bold;
+            color: var(--textColor);
 
             margin-left: 10px;
         }
@@ -108,6 +118,7 @@
     .category-button {
         margin: 10px 0;
         animation: fade-in 0.15s ease-in-out;
+        color: var(--textColor);
 
         .category-button-text {
             .icon {
@@ -126,7 +137,7 @@
 
             .subcategory {
                 margin-right: 30px;
-                .parameter-button {
+                .route-button {
                     margin: 2px;
                     padding: 5px;
                     border-radius: 5px;
@@ -137,7 +148,7 @@
                         color: var(--textHoverColor);
                     }
 
-                    .parameter-button-text {
+                    .route-button-text {
                         font-weight: 16px;
                     }
                 }

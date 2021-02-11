@@ -1,0 +1,83 @@
+.settings {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    .header {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        padding: 10px;
+
+        .back {
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+
+            &:hover {
+                color: var(--textHoverColor);
+            }
+        }
+    }
+
+    .timetables {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+
+        .cached-timetable {
+            display: flex;
+            align-items: center;
+            padding: 5px 10px;
+            margin: 5px 0;
+            border: 1px solid var(--textHoverColor);
+            border-radius: 5px;
+
+            .info {
+                display: flex;
+                flex-direction: column;
+                color: var(--textColor);
+                cursor: pointer;
+            }
+
+            .delete {
+                color: red;
+            }
+
+            .refresh {
+                color: var(--textColor);
+            }
+
+            .delete, .refresh {
+                padding: 5px;
+                margin: 5px;
+                font-weight: bold;
+                cursor: pointer;
+                border-radius: 5px;
+                transition: background-color 0.25s ease-in-out;
+
+                &:hover {
+                    background-color: var(--contrastHoverColor);
+                }
+            }
+        }
+    }
+
+    .footer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .clear {
+            padding: 10px;
+            margin: 5px;
+            font-size: 20px;
+            color: red;
+            cursor: pointer;
+            border-radius: 10px;
+
+            transition: background-color 0.25s ease-in-out;
+            &:hover {
+                background-color: var(--contrastHoverColor);
+            }
+        }
+    }
+}

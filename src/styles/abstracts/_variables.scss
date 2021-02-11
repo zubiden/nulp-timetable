@@ -9,20 +9,54 @@
 
     --hoverColor: rgba(0,0,0, 0.08);
 
-    --linkColor: blue;
+    --linkColor: green;
 
     --backgroundColor: #F6F6F6;
 
-    --timetableCellColor: #C4C9CC;
-    --timetableDateColor: #E8BC2C;
-    --timetableNumerationColor: #E8BC2C;
+    --searchBackgroundColor: #DDDDDD;
+
+    --timetableCellColor: var(--backgroundColor);
 
     --timetableLectionColor: #1DA1F1;
     --timetablePracticalColor: #FE8C27;
-    --timetableLabColor: #5723FD;
+    --timetableLabColor: #7D6299;
     --timetableConsultationColor: #6CB859;
+    --timetableBorderColor: #DDDDDD;
+    --timetableOtherBorderColor: #AAAAAA;
 
-}
+    --scrollbarColor: rgba(0,0,0,0.3);
+
+    --buttonActive: #CCCCCC;
+    --buttonNonActive: #AAAAAA;
+
+    @media (prefers-color-scheme: dark) {
+        --textColor: white;
+        --textHoverColor: #DDDDDD;
+        --textSelectedColor: green;
+
+        --contrastTextColor: #0F1E41;
+        --contrastHoverColor: #454545;
+        --contrastSelectedColor: #555555;
+
+        --hoverColor: rgba(255,255,255, 0.08);
+
+        --linkColor: #1DB842;
+
+        --backgroundColor: #0F1E41;
+
+        --searchBackgroundColor: #222B4F;
+
+        --timetableCellColor: var(--backgroundColor);
+        --timetableBorderColor: #232D52;
+        --timetableOtherBorderColor: #2A3560;
+
+        --scrollbarColor: rgba(255, 255, 255, 0.3);
+
+        --buttonActive: #29335C;
+        --buttonNonActive: black;
+    }
+
+}   
 
 
 @mixin mobile {

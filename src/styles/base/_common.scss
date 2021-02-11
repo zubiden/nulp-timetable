@@ -44,3 +44,33 @@ a, a:hover, a:visited, a:active {
         display: none;
     }
 }
+
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+    border: solid 3px transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--scrollbarColor);
+    border: solid 3px transparent;
+    border-radius: 5px;
+    min-height: 50px;
+    height: 50px;
+    max-height: 50px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbarColor);
+}
+
+* {
+    scrollbar-color: rgba(var(--scrollbarColor), .3) transparent;
+    scrollbar-width: thin;
+}

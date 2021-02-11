@@ -2,9 +2,10 @@
 	display: flex;
     position: relative;
 
-    background-color: var(--contrastHoverColor);
+    background-color: var(--buttonNonActive);
     border-radius: 20px;
     text-align: center;
+    color: var(--textColor);
 
     .slider {
         position: absolute;
@@ -12,7 +13,7 @@
 
         transition: left 0.15s ease-in-out,
                     right 0.15s ease-in-out;
-        background-color: var(--contrastSelectedColor);
+        background-color: var(--buttonActive);
         border-radius: 20px;
     }
 

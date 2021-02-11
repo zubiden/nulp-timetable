@@ -20,7 +20,10 @@ export async function fetchHtml(params = {}) {
 export async function getInstitutes() {
 	return fetchHtml().then(html => {
 		const select = parseAndGetOne(html, "#edit-departmentparent-abbrname-selective");
-		const institutes = Array.from(select.children).map(child => child.value).filter(inst => inst !== "All").sort((a, b) => a.localeCompare(b));
+		const institutes = Array.from(select.children)
+								.map(child => child.value)
+								.filter(inst => inst !== "All")
+								.sort((a, b) => a.localeCompare(b));
 		return institutes;
 	})
 }
@@ -28,15 +31,20 @@ export async function getInstitutes() {
 export async function getGroups(departmentparent_abbrname_selective = "All") {
 	return fetchHtml({departmentparent_abbrname_selective}).then(html => {
 		const select = parseAndGetOne(html, "#edit-studygroup-abbrname-selective");
-		const groups = Array.from(select.children).map(child => child.value).filter(inst => inst !== "All").sort((a, b) => a.localeCompare(b));
+		const groups = Array.from(select.children)
+							.map(child => child.value)
+							.filter(inst => inst !== "All")
+							.sort((a, b) => a.localeCompare(b));
 		return groups;
 	})
 }
 
-export async function getTimetable(departmentparent_abbrname_selective = "All", studygroup_abbrname_selective="All") {
+export async function getTimetable(studygroup_abbrname_selective="All", departmentparent_abbrname_selective = "All" ) { // group, institute
 	return fetchHtml({departmentparent_abbrname_selective, studygroup_abbrname_selective}).then(html => {
 		const content = parseAndGetOne(html, ".view-content");
-		const days = Array.from(content.children).map(parseDay).flat(1);
+		const days = Array.from(content.children)
+							.map(parseDay)
+							.flat(1);
 		return days;
 	})
 }

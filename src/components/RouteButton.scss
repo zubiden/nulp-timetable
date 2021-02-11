@@ -1,0 +1,9 @@
+.route-button {
+    display: block;
+    cursor: pointer;
+    color: var(--textColor);
+
+    &:hover, &:visited, &:active {
+        color: var(--textColor);
+    }
+}
