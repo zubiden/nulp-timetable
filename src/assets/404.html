@@ -3,16 +3,25 @@
     <head>
         <meta charset="utf-8">
         <title>404</title>
-        <script type="text/javascript">
-            window.onload = function() {
-              const node = document.getElementById( 'browser-path' );
-
-              node.textContent = document.location.toString();
-            }
-
-        </script>
     </head>
     <body>
-        <div>Current path: <span id="browser-path"> loading...</span></div>
+        <div>Redirecting...</div>
+
+        <script type="text/javascript">
+            window.onload = function() {
+                const path = "/nulp-timetable/"
+                const encodedHash = "%23";
+
+                let currentPath = location.pathname.substring(path.length);
+
+                if(currentPath.startsWith(encodedHash)) { // hash got encoded by browser... bruh
+                    let path = currentPath.substring(encodedHash.length);
+                    location.pathname = "/nulp-timetable/";
+                    location.hash = path;
+                } else {
+                    location.pathname = "/nulp-timetable/"; // redirecting to main page in case of 404
+                }
+            }
+        </script>
     </body>
 </html>

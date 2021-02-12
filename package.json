@@ -81,7 +81,7 @@
     "postcss-cli": "^6.1.3",
     "optimize-css-assets-webpack-plugin": "^5.0.4",
     "sass-loader": "^8.0.2",
-    "semantic-release": "^15.14.0",
+    "semantic-release": ">=17.2.3",
     "serve": "^11.3.2",
     "shx": "^0.3.2",
     "style-loader": "^1.2.1",
