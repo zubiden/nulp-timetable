@@ -17,11 +17,8 @@
                 if(currentPath.startsWith(encodedHash)) { // hash got encoded by browser... bruh
                     let path = currentPath.substring(encodedHash.length);
                     const el = document.getElementById("redirect");
-                    //el.textContent = `Next URL: /nulp-timetable/#${path}`;
-                    location.pathname = basePath;
-                    location.hash = path;
+                    location.replace(basePath+"#"+path);
                 } else {
-                    //el.textContent = "Hash not found in the URL, redirecting to main page"
                     location.pathname = "/nulp-timetable/"; // redirecting to main page in case of 404
                 }
             }
