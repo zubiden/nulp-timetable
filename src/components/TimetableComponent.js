@@ -179,7 +179,7 @@ const LessonFragment = ({ lesson }) => {
             <div className="subject">{lesson.subject}</div>
             <div className="lecturer">{lesson.lecturer}</div>
             <div className="location">{lesson.location}</div>
-            {lesson.url && <a className="url" href={lesson.url} target="_blank">Посилання</a>}
+            {lesson.url && <a className="url" href={lesson.url} target="_blank" ref="noopener">Посилання</a>}
         </div>
     )
 }
