@@ -40,7 +40,11 @@ export async function getGroups(departmentparent_abbrname_selective = "All") {
 }
 
 export async function getTimetable(studygroup_abbrname_selective="All", departmentparent_abbrname_selective = "All" ) { // group, institute
-	return fetchHtml({departmentparent_abbrname_selective, studygroup_abbrname_selective}).then(html => {
+	return fetchHtml({
+		departmentparent_abbrname_selective,
+	 	studygroup_abbrname_selective,
+	  	semestrduration: 1, // Why, NULP?
+	}).then(html => {
 		const content = parseAndGetOne(html, ".view-content");
 		const days = Array.from(content.children)
 							.map(parseDay)
