@@ -8,6 +8,7 @@
         text-align: center;
         grid-column: 1/3;
         align-self: center;
+        color: var(--textColor);
     }
 
     .error {
@@ -23,7 +24,7 @@
     grid-gap: 10px;
 
     // BRUH
-    // Seact component doesn't have top-level class
+    // Search component doesn't have top-level class
 
     & > div:first-child {
         grid-column: 1/3;
