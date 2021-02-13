@@ -45,14 +45,14 @@ export async function getGroups(departmentparent_abbrname_selective = "All") {
 							.sort((a, b) => a.localeCompare(b));
 		return groups;
 	}).catch(err => {
-		if(departmentparent_abbrname_selective === "All") { // only for all groups
-			return fetch(FALLBACK_URL+"groups.json").then(response => {
-				if(!response.ok) throw Error(err);
-				return response.json();
-			})
-		} else {
-			throw Error(err);
+		let fallback = FALLBACK_URL+`institutes/${departmentparent_abbrname_selective}.json`;
+		if(departmentparent_abbrname_selective === "All") { //get all groups
+			fallback = FALLBACK_URL+`groups.json`;
 		}
+		return fetch(fallback).then(response => {
+			if(!response.ok) throw Error(err);
+			return response.json();
+		})
 	})
 }
 
