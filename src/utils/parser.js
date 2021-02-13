@@ -2,6 +2,8 @@ const NULP = "https://student.lpnu.ua/";
 const TIMETABLE_SUFFIX = "students_schedule";
 const PROXY = "https://playcraft.com.ua/proxy.php?url=";
 
+const FALLBACK_URL = "https://raw.githubusercontent.com/prettydude/nulp-timetable-data/data/";
+
 export async function fetchHtml(params = {}) {
 	let baseUrl = NULP + TIMETABLE_SUFFIX;
 	const originalUrl = new URL(baseUrl);
@@ -24,7 +26,13 @@ export async function getInstitutes() {
 								.map(child => child.value)
 								.filter(inst => inst !== "All")
 								.sort((a, b) => a.localeCompare(b));
+								console.log(institutes)
 		return institutes;
+	}).catch(err => {
+		return fetch(FALLBACK_URL+"institutes.json").then(response => {
+			if(!response.ok) throw Error(err);
+			return response.json();
+		})
 	})
 }
 
@@ -36,6 +44,15 @@ export async function getGroups(departmentparent_abbrname_selective = "All") {
 							.filter(inst => inst !== "All")
 							.sort((a, b) => a.localeCompare(b));
 		return groups;
+	}).catch(err => {
+		if(departmentparent_abbrname_selective === "All") { // only for all groups
+			return fetch(FALLBACK_URL+"groups.json").then(response => {
+				if(!response.ok) throw Error(err);
+				return response.json();
+			})
+		} else {
+			throw Error(err);
+		}
 	})
 }
 
@@ -50,6 +67,11 @@ export async function getTimetable(studygroup_abbrname_selective="All", departme
 							.map(parseDay)
 							.flat(1);
 		return days;
+	}).catch(err => {
+		return fetch(FALLBACK_URL+`timetables/${studygroup_abbrname_selective}.json`).then(response => {
+			if(!response.ok) throw Error(err);
+			return response.json();
+		})
 	})
 }
 
@@ -65,7 +87,11 @@ export async function getTimetable(studygroup_abbrname_selective="All", departme
 */
 
 function parseDay(day) {
-	const dayNumber = dayToNumber(day.querySelector(".view-grouping-header").textContent);
+	const dayText = day.querySelector(".view-grouping-header");
+	if(!dayText) {
+		throw Error("Got wrong DOM structure for day!");
+	}
+	const dayNumber = dayToNumber(dayText.textContent);
 	const contentChildren = day.querySelector(".view-grouping-content").children;
 
 	let dayLessons = [];

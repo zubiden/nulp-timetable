@@ -16,7 +16,7 @@ class TimetableManager {
 			}
 		}
 
-		if(!this.institutes.length === 0) {
+		if(this.institutes.length === 0) {
 			console.log("Downloading institute list...");
 			this.institutes = await this.getInstitutes(); // need to test...
 		}
@@ -59,6 +59,9 @@ class TimetableManager {
 		}
 
 		const timetable = await parser.getTimetable(group);
+		if(!timetable) {
+			throw Error(`Failed to get timetable! Group: ${group}, checkCache: ${checkCache}`);
+		}
 		this.timetables = this.timetables.filter(el => el.group !== group) // remove previous timetable
 		this.timetables.push({
 			group,
