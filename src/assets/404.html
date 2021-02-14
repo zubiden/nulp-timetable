@@ -19,7 +19,7 @@
                     const el = document.getElementById("redirect");
                     location.replace(basePath+"#"+path);
                 } else {
-                    location.pathname = "/nulp-timetable/"; // redirecting to main page in case of 404
+                    location.replace(basePath+"#"+currentPath); // .../GROUP -> .../#/GROUP
                 }
             }
         </script>
