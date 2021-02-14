@@ -8,6 +8,8 @@ import GroupSelection from "./routes/GroupSelection"
 import Timetable from "./routes/Timetable"
 import Settings from "./routes/Settings"
 
+import LoadingComponent from "./components/LoadingComponent"
+
 import TimetableManager from "./managers/TimetableManager"
 
 export class App extends Component {
@@ -32,6 +34,21 @@ export class App extends Component {
             }
 
             if(!content) {
+
+                if(TimetableManager.getCachedInstitutes().length === 0) {
+                    TimetableManager.requestInstitutes().then( inst => {
+                        this.forceUpdate();
+                    })
+                    content = <LoadingComponent text="Отримання списку інститутів..."/>
+                }
+
+                if(TimetableManager.getCachedGroups().length === 0) {
+                    TimetableManager.requestGroups().then( inst => {
+                        this.forceUpdate();
+                    })
+                    content = <LoadingComponent text="Отримання списку груп..."/>
+                }
+
             	let institute = TimetableManager.getCachedInstitutes().find(inst => inst.toLowerCase().trim() === hash.toLowerCase());
             	if(institute) {
             		content = <GroupSelection institute={institute}/>

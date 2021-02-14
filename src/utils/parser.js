@@ -6,7 +6,7 @@ const PROXY = "https://playcraft.com.ua/proxy.php?url=";
 
 const FALLBACK_URL = "https://raw.githubusercontent.com/prettydude/nulp-timetable-data/data/";
 
-const TIMEOUT = 5000; //5s
+const TIMEOUT = 3000; //3s
 
 export async function fetchHtml(params = {}) {
 	let baseUrl = NULP + TIMETABLE_SUFFIX;

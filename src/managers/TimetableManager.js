@@ -18,13 +18,18 @@ class TimetableManager {
 
 		if(this.institutes.length === 0) {
 			console.log("Downloading institute list...");
-			this.institutes = await this.getInstitutes(); // need to test...
+			this.requestInstitutes();
 		}
 
 		if(this.groups.length === 0) {
 			console.log("Downloading group list...");
-			this.groups = await this.getGroups(); // need to test...
+			this.requestGroups();
 		}
+	}
+
+	async requestInstitutes() {
+		if(this.institutesRequest) return this.institutesRequest;
+		return this.institutesRequest = this.getInstitutes();
 	}
 
 	async getInstitutes() {
@@ -33,6 +38,11 @@ class TimetableManager {
 		storage.setItem("institutes", institutes)
 		this.institutes = institutes;
 		return institutes;
+	}
+
+	async requestGroups() { // only for all
+		if(this.groupsRequest) return this.groupsRequest;
+		return this.groupsRequest = this.getGroups();
 	}
 
 	async getGroups(institute) {
