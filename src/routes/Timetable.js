@@ -52,6 +52,9 @@ class Timetable extends React.Component {
 
     componentDidUpdate(prevProps) {
         if (this.props.group !== prevProps.group) {
+            this.setState({
+                timetable: [] // clear
+            })
             this.fetchData(this.props.group)
         }
     }

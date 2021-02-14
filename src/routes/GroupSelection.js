@@ -38,6 +38,9 @@ class GroupSelection extends React.Component {
 
 	componentDidUpdate(prevProps) {
 		if (this.props.institute !== prevProps.institute) {
+			this.setState({
+                groups: [] // clear
+            })
 		    this.fetchData(this.props.institute);
 		}
 	}
