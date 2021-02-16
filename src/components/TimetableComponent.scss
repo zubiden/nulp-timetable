@@ -114,8 +114,8 @@
 
             color: var(--textColor);
 
-            &.lection {
-                border-left: 10px solid var(--timetableLectionColor);
+            &.lecture, &.lection { // rename
+                border-left: 10px solid var(--timetableLectureColor);
             }
 
             &.practical {

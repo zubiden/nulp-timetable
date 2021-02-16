@@ -199,11 +199,11 @@ function tryToGetType(location) {
 	if(location.includes("практична")) return "practical";
 	if(location.includes("лабораторна")) return "lab";
 	if(location.includes("конс.")) return "consultation";
-	return "lection";
+	return "lecture";
 }
 
 function dayToNumber(day) {
-	switch(day.toLowerCase()) {
+	switch(day?.toLowerCase()) {
 		case "пн":
 			return 1;
 		case "вт":
