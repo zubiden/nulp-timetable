@@ -47,7 +47,7 @@ class TimetableComponent extends React.Component {
                     }
                 } else {
                     if (j === 0) {
-                        cells.push(<TimetableCell numeration key={i}>{i}</TimetableCell>);
+                        cells.push(<NumerationCell key={i} num={i} time={this.getHours(i)}/>);
                     } else {
                         const lesson = elements.find(el => el.position === i && el.day === j)?.lesson;
                         cells.push(<TimetableCell key={i+":"+j} lesson={lesson}/>)
@@ -79,6 +79,29 @@ class TimetableComponent extends React.Component {
         }
     }
 
+    getHours(num) {
+        switch(num) {
+            case 1:
+                return ["8:30", "10:05"];
+            case 2:
+                return ["10:20", "11:55"];
+            case 3:
+                return ["12:10", "13:45"];
+            case 4:
+                return ["14:15", "15:50"];
+            case 5:
+                return ["16:00", "17:35"];
+            case 6:
+                return ["17:40", "19:15"];
+            case 7:
+                return ["19:20", "20:55"];
+            case 8:
+                return ["21:00", "22:35"];
+            default:
+                return ["", ""];
+        }
+    }
+
     findSize(elements) {
         let days = 5;
         let rows = 5;
@@ -91,6 +114,21 @@ class TimetableComponent extends React.Component {
             rows
         }
     }
+}
+
+const NumerationCell = ({num, time}) => {
+    return (
+            <div className={classNames({
+                "timetable-cell": true,
+                "numeration": true,
+            })}>
+                <div className="num">{num}</div>
+                <div className="hours">
+                    <div>{time[0]}</div>
+                    <div>{time[1]}</div>
+                </div>
+            </div>
+        )
 }
 
 const EmptyCell = () => {
@@ -127,15 +165,10 @@ class TimetableCell extends React.Component {
     }
 
     render() {
-        const { date, numeration, lesson, empty, children } = this.props;
+        const { lesson, children } = this.props;
         const { fadeIn, fadeOut, prevLesson } = this.state;
         return (
-            <div className={classNames({
-                "timetable-cell": true,
-                "date": date,
-                "numeration": numeration,
-                "empty": empty
-            })}>
+            <div className="timetable-cell">
                 <div onAnimationEnd={this.onAnimationEnd} className={classNames({
                     "animation-wrapper": true,
                     "fade-in": fadeIn,

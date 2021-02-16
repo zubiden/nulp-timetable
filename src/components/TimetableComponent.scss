@@ -74,6 +74,18 @@
             color: var(--textColor);
             border-right: var(--timetableOtherBorderColor) 2px solid;
             margin-right: -1px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+
+            .hours {
+                margin-left: 10px;
+                font-size: 12px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: flex-end;
+            }
         }
 
         @include mobile {
