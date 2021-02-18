@@ -23,8 +23,11 @@ export class App extends Component {
     render() {
         // TODO normal router
         const hash = getHash();
+        let path = hash.split("/");
+        let root = path[0];
+
         let content = null;
-        if(hash) {
+        if(root) {
             switch(hash.toLowerCase()) {
                 case "settings":
                     content = <Settings/>
@@ -49,13 +52,13 @@ export class App extends Component {
                     content = <LoadingComponent text="Отримання списку груп..."/>
                 }
 
-            	let institute = TimetableManager.getCachedInstitutes().find(inst => inst.toLowerCase().trim() === hash.toLowerCase());
+            	let institute = TimetableManager.getCachedInstitutes().find(inst => inst.toLowerCase().trim() === root.toLowerCase());
             	if(institute) {
             		content = <GroupSelection institute={institute}/>
             	} else {
-            		let group = TimetableManager.getCachedGroups().find(gr => gr.toLowerCase().trim() === hash.toLowerCase());
+            		let group = TimetableManager.getCachedGroups().find(gr => gr.toLowerCase().trim() === root.toLowerCase());
             		if(group) {
-            			content = <Timetable group={group}/>
+            			content = <Timetable group={group} subgroup={Number.parseInt(path[1] || 1)}/>
             		}
             	}
             }

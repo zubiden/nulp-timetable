@@ -52,6 +52,20 @@ class TwoSideButton extends React.Component {
 		//window.removeEventListener('resize', this.onResize())
 	}
 
+	componentDidUpdate(prevProps, prevState) {
+		if(this.props.default !== prevProps.default) {
+			this.setState({
+				side: this.props.default ?? "one",
+			})
+		}
+
+		if(this.state.side !== prevState.side) {
+			this.setState({
+				sliderStyles: this._calculateSliderStyles(this.state.side)
+			})
+		}
+	}
+
 	onResize = () => {
 		return throttle(() => {
 			this.setState({
@@ -63,7 +77,6 @@ class TwoSideButton extends React.Component {
 	select(side) {
 		this.setState({
 			side: side,
-			sliderStyles: this._calculateSliderStyles(side),
 		})
 
 		if(this.props.onSelect) this.props.onSelect(side);

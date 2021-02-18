@@ -34,6 +34,8 @@ class TimetableComponent extends React.Component {
 
     makeTable(size, elements) {
         const cells = [];
+        let active = this.getActiveLesson();
+
         for (let i = 0; i < size.rows + 1; i++) {
             for (let j = 0; j < size.days + 1; j++) {
                 // first row
@@ -43,14 +45,13 @@ class TimetableComponent extends React.Component {
                     } else {
                         const weekday = this.getWeekday(j);
                         cells.push(<DayCell weekday={weekday} key = {weekday}/>);
-                        //cells.push(<TimetableCell date key={weekday}><div className="date">{weekday}</div></TimetableCell>)
                     }
                 } else {
                     if (j === 0) {
                         cells.push(<NumerationCell key={i} num={i} time={this.getHours(i)}/>);
                     } else {
                         const lesson = elements.find(el => el.position === i && el.day === j)?.lesson;
-                        cells.push(<TimetableCell key={i+":"+j} lesson={lesson}/>)
+                        cells.push(<LessonCell key={i+":"+j} lesson={lesson} active={active.day === j && active.num === i}/>)
                     }
                 }
             }
@@ -58,6 +59,44 @@ class TimetableComponent extends React.Component {
         return cells;
     }
 
+    getActiveLesson() {
+    	let date = new Date(); //current
+    	let currentDay = date.getDay(); // 0 - Sunday
+    	if(currentDay === 0) currentDay = 7; // костиль
+
+    	let prevEnd = null;
+
+    	for(let i = 1; i < 9; i++) { // 1-8
+    		let endH = this.getHours(i)[1];
+    		
+    		let end = this.timeToDate(endH);
+
+    		if(date < end && (!prevEnd || date > prevEnd)) {
+    			return {
+    				day: currentDay,
+    				num: i
+    			}
+    		} else {
+    			prevEnd = end;
+    		}
+    	}
+
+    	return {
+    		day: -1,
+    		num: -1
+    	}
+    }
+
+    timeToDate(time) {
+    	let date = new Date();
+    	let [hours, minutes] = time.split(':');
+    	date.setHours(hours);
+    	date.setMinutes(minutes)
+    	date.setSeconds(0);
+    	return date;
+    }
+
+    // TODO переписати ці світчі на щось нормальне
     getWeekday(number) {
         switch (number) {
             case 1:
@@ -152,7 +191,7 @@ const DayCell = ({weekday}) => {
         )
 }
 
-class TimetableCell extends React.Component {
+class LessonCell extends React.Component {
 
     constructor(props) {
         super(props);
@@ -165,14 +204,15 @@ class TimetableCell extends React.Component {
     }
 
     render() {
-        const { lesson, children } = this.props;
+        const { lesson, children, active } = this.props;
         const { fadeIn, fadeOut, prevLesson } = this.state;
         return (
             <div className="timetable-cell">
                 <div onAnimationEnd={this.onAnimationEnd} className={classNames({
                     "animation-wrapper": true,
                     "fade-in": fadeIn,
-                    "fade-out": fadeOut
+                    "fade-out": fadeOut,
+                    "active": active
                 })}>
                     {children}
                     <LessonFragment lesson={fadeOut ? prevLesson : lesson}/>

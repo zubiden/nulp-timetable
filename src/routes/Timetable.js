@@ -2,7 +2,7 @@ import React from 'react'
 import classNames from "classnames"
 
 import TimetableManager from "../managers/TimetableManager"
-import { HISTORY } from "../utils/history"
+import { HISTORY, getHash } from "../utils/history"
 
 import RouteButton from "../components/RouteButton"
 import TwoSideButton from "../components/TwoSideButton"
@@ -12,14 +12,13 @@ class Timetable extends React.Component {
     constructor(props) {
         super(props);
 
-        const subgroup = 1; // TODO pass subgroup in URL
-
         this.state = {
             timetable: [],
             week: getWeek() % 2 === 0 ? 2 : 1, // NULP doesn't like standardization
-            subgroup: subgroup,
             isError: false,
         }
+
+        this.checkSubgroup();
     }
 
     render() {
@@ -31,9 +30,9 @@ class Timetable extends React.Component {
 		            <div className="location">{this.props.group}</div>
 		        </div>
 		        <div className="controls">
-		            <TwoSideButton one="I підгрупа" two="II підгрупа" default={this.state.subgroup === 1 ? "one" : "two"} onSelect={side => this.setState({subgroup: side === "one" ? 1 : 2})}/>
+		            <TwoSideButton one="I підгрупа" two="II підгрупа" default={this.getActiveSubgroup() === 1 ? "one" : "two"} onSelect={side => this.setSubgroup(side === "two" ? 2 : 1)}/>
 		            <div className="spreader"/>
-		            <TwoSideButton one="По чисельнику" two="По знаменнику" default={this.state.week === 1 ? "one" : "two"} onSelect={side => this.setState({week: side === "one"? 1 : 2})}/>
+		            <TwoSideButton one="По чисельнику" two="По знаменнику" default={this.state.week === 1 ? "one" : "two"} onSelect={side => this.setState({week: side === "two" ? 2 : 1})}/>
 		        </div>
 		        {this.state.timetable.length === 0 && !this.state.isError && <div className="loading">Отримання даних з lpnu.ua</div>}
 		        {this.state.isError && <div className="error">Помилка при отриманні даних!</div>}
@@ -47,7 +46,7 @@ class Timetable extends React.Component {
     }
 
     componentDidMount() {
-        this.fetchData(this.props.group)
+        this.fetchData(this.props.group);
     }
 
     componentDidUpdate(prevProps) {
@@ -56,6 +55,15 @@ class Timetable extends React.Component {
                 timetable: [] // clear
             })
             this.fetchData(this.props.group)
+        }
+
+        this.checkSubgroup();
+    }
+
+    checkSubgroup() {
+        console.log(this.props.subgroup);
+        if(this.props.subgroup !== 1 && this.props.subgroup !== 2) {
+            this.setSubgroup(null); // empty
         }
     }
 
@@ -72,8 +80,6 @@ class Timetable extends React.Component {
     }
 
     getFilteredTimetable() {
-        const week = this.state.week;
-        const subgroup = this.state.subgroup;
         return this.state.timetable.filter(lesson => this.testWeek(lesson) && this.testSubgroup(lesson));
     }
 
@@ -107,9 +113,26 @@ class Timetable extends React.Component {
     }
 
     testSubgroup(lesson) {
-        if (this.state.subgroup === 1 && lesson.isFirstSubgroup) return true;
-        if (this.state.subgroup === 2 && lesson.isSecondSubgroup) return true;
+        if (this.getActiveSubgroup() === 1 && lesson.isFirstSubgroup) return true;
+        if (this.getActiveSubgroup() === 2 && lesson.isSecondSubgroup) return true;
         return false;
+    }
+
+    getActiveSubgroup() {
+        return this.props.subgroup === 2 ? 2 : 1;
+    }
+
+    setSubgroup(sub) {
+        let hash = getHash();
+        let path = hash.split("/");
+        if(sub) {
+           path[1] = sub;
+        } else {
+            path.splice(1, 1);
+        }
+        HISTORY.push({
+            hash: "/"+path.join("/")
+        })
     }
 
     updateTimetable = () => {

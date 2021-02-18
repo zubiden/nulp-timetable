@@ -112,6 +112,10 @@
             &.fade-out {
                 animation: fade-out 0.25s ease-out;
             }
+
+            &.active {
+                background-color: var(--timetableCellHighlight);
+            }
         }
 
         .lesson {

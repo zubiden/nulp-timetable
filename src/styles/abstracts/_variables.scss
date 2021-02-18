@@ -16,6 +16,7 @@
     --searchBackgroundColor: #DDDDDD;
 
     --timetableCellColor: var(--backgroundColor);
+    --timetableCellHighlight: #DDDDDD;
 
     --timetableLectureColor: #1DA1F1;
     --timetablePracticalColor: #FE8C27;
@@ -26,8 +27,8 @@
 
     --scrollbarColor: rgba(0,0,0,0.3);
 
-    --buttonActive: #CCCCCC;
-    --buttonNonActive: #BBBBBB;
+    --buttonActive: #DDDDDD;
+    --buttonNonActive: #BFBFBF;
 
     @media (prefers-color-scheme: dark) {
         --textColor: white;
@@ -47,6 +48,8 @@
         --searchBackgroundColor: #222B4F;
 
         --timetableCellColor: var(--backgroundColor);
+        --timetableCellHighlight: #203060;
+
         --timetableBorderColor: #232D52;
         --timetableOtherBorderColor: #2A3560;
 
