@@ -4,7 +4,7 @@ const NULP = "https://student.lpnu.ua/";
 const TIMETABLE_SUFFIX = "students_schedule";
 const PROXY = "https://playcraft.com.ua/proxy.php?url=";
 
-const FALLBACK_URL = "https://raw.githubusercontent.com/prettydude/nulp-timetable-data/data/";
+const FALLBACK_URL = "https://raw.githubusercontent.com/zubiden/nulp-timetable-data/data/";
 
 const TIMEOUT = 3000; //3s
 
