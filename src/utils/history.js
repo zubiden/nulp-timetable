@@ -45,5 +45,5 @@ export function openInNewTab(url) {
 }
 
 export function getHash() {
-	return decodeURI(window.location.hash).substring(2); // #/Settings -> Settings
+	return decodeURI(window.location.hash).replace('#/', '').replace('#', ''); // #/Settings -> Settings
 }

@@ -130,6 +130,10 @@
 
             color: var(--textColor);
 
+            @include mobile {
+                padding: 5px 5px 5px 15px;
+            }
+
             &.lecture, &.lection { // rename
                 border-left: 10px solid var(--timetableLectureColor);
             }
@@ -157,6 +161,15 @@
                 .number {
                     display: none;
                 }
+            }
+
+            .subject {
+                margin-bottom: 0.25rem;
+                font-weight: 600;
+            }
+
+            .lecturer {
+                margin-bottom: 0.15rem;
             }
 
             .url {

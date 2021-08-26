@@ -1,7 +1,7 @@
 import React from 'react'
 
 import classNames from "classnames"
-import {throttle} from "../utils/func"
+import { throttle } from "../utils/func"
 
 import "./TwoSideButton.scss"
 
@@ -12,7 +12,7 @@ class TwoSideButton extends React.Component {
 
 		this.state = {
 			side: this.props.default ?? "one",
-			sliderStyles: {left: 0, right: "100%"}
+			sliderStyles: { left: 0, right: "100%" }
 		}
 
 		this.oneRef = React.createRef();
@@ -22,74 +22,72 @@ class TwoSideButton extends React.Component {
 	render() {
 		return (
 			<div className="two-side-button">
-				<div className="slider" style={this.state.sliderStyles}/>
+				<div className="slider" style={this.state.sliderStyles} />
 				<div className={classNames({
 					"side-button": true,
 					"side-one": true,
-					"selected": this.state.side ==="one"
+					"selected": this.state.side === "one"
 				})} onClick={() => this.select("one")} ref={this.oneRef}>
 					{this.props.one}
 				</div>
 				<div className={classNames({
 					"side-button": true,
 					"side-two": true,
-					"selected": this.state.side ==="two"
+					"selected": this.state.side === "two"
 				})} onClick={() => this.select("two")} ref={this.twoRef}>
 					{this.props.two}
 				</div>
 			</div>
-			)
+		)
 	}
 
 	componentDidMount() {
 		this.setState({
 			sliderStyles: this._calculateSliderStyles(this.state.side),
 		})
-		window.addEventListener('resize', this.onResize())
+		window.addEventListener('resize', this.onResize);
 	}
 
 	componentWillUnmount() {
-		//window.removeEventListener('resize', this.onResize())
+		window.removeEventListener('resize', this.onResize);
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		if(this.props.default !== prevProps.default) {
+		if (this.props.default !== prevProps.default) {
 			this.setState({
 				side: this.props.default ?? "one",
 			})
 		}
 
-		if(this.state.side !== prevState.side) {
+		if (this.state.side !== prevState.side) {
 			this.setState({
 				sliderStyles: this._calculateSliderStyles(this.state.side)
 			})
 		}
 	}
 
-	onResize = () => {
-		return throttle(() => {
-			this.setState({
-				sliderStyles: this._calculateSliderStyles(this.state.side),
-			})
-		}, 250);
-	}
+	onResize = throttle(() => {
+		this.setState({
+			sliderStyles: this._calculateSliderStyles(this.state.side),
+		})
+	}, 250);
 
 	select(side) {
 		this.setState({
 			side: side,
 		})
 
-		if(this.props.onSelect) this.props.onSelect(side);
+		if (this.props.onSelect) this.props.onSelect(side);
 	}
 
 	_calculateSliderStyles(side) {
 		let el = null;
-		if(side === "one") {
+		if (side === "one") {
 			el = this.oneRef.current;
 		} else {
 			el = this.twoRef.current;
 		}
-		if(!el) return {
+		if (!el) return {
 			left: 0,
 			right: "100%"
 		}
@@ -97,12 +95,12 @@ class TwoSideButton extends React.Component {
 		const bounds = el.getBoundingClientRect()
 
 		const left = bounds.left - rootBounds.left;
-        const right = rootBounds.right - bounds.right;
+		const right = rootBounds.right - bounds.right;
 
-        return {
-            left: `${left}px`,
-            right: `${right}px`,
-        }
+		return {
+			left: `${left}px`,
+			right: `${right}px`,
+		}
 	}
 }
 

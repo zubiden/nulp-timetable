@@ -30,10 +30,18 @@ class Timetable extends React.Component {
 		            <div className="location">{this.props.group}</div>
 		        </div>
 		        <div className="controls">
-		            <TwoSideButton one="I підгрупа" two="II підгрупа" default={this.getActiveSubgroup() === 1 ? "one" : "two"} onSelect={side => this.setSubgroup(side === "two" ? 2 : 1)}/>
-		            <div className="spreader"/>
-		            <TwoSideButton one="По чисельнику" two="По знаменнику" default={this.state.week === 1 ? "one" : "two"} onSelect={side => this.setState({week: side === "two" ? 2 : 1})}/>
-		        </div>
+		            { this.hasSubgroups() ? 
+                        <TwoSideButton one="I підгрупа" two="II підгрупа" default={this.getActiveSubgroup() === 1 ? "one" : "two"} onSelect={side => this.setSubgroup(side === "two" ? 2 : 1)}/>
+                        :
+                        <div className="spreader"/>
+                    }
+                    <div className="spreader"/>
+		            { this.hasWeeks() ? 
+                        <TwoSideButton one="По чисельнику" two="По знаменнику" default={this.state.week === 1 ? "one" : "two"} onSelect={side => this.setState({week: side === "two" ? 2 : 1})}/>
+                        :
+                        <div className="spreader"/>
+                    }
+                </div>
 		        {this.state.timetable.length === 0 && !this.state.isError && <div className="loading">Отримання даних з lpnu.ua</div>}
 		        {this.state.isError && <div className="error">Помилка при отриманні даних!</div>}
 		        {this.state.timetable.length > 0 && <TimetableComponent onReady={this.tryToScrollToCurrentDay} elements={this.prepareTimetable()}/>}
@@ -61,10 +69,23 @@ class Timetable extends React.Component {
     }
 
     checkSubgroup() {
-        console.log(this.props.subgroup);
         if(this.props.subgroup !== 1 && this.props.subgroup !== 2) {
             this.setSubgroup(null); // empty
         }
+    }
+
+    hasSubgroups() {
+        if (this.state.timetable?.length) {
+            return this.state.timetable.find(el => el.isFirstSubgroup !== el.isSecondSubgroup);
+        }
+        return false;
+    }
+
+    hasWeeks() {
+        if (this.state.timetable?.length) {
+            return this.state.timetable.find(el => el.isFirstWeek !== el.isSecondWeek);
+        }
+        return false;
     }
 
     fetchData(group) {

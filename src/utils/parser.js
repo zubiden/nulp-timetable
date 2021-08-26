@@ -30,7 +30,6 @@ export async function getInstitutes() {
 								.map(child => child.value)
 								.filter(inst => inst !== "All")
 								.sort((a, b) => a.localeCompare(b));
-								console.log(institutes)
 		return institutes;
 	}).catch(err => {
 		return fetch(FALLBACK_URL+"institutes.json").then(response => {

@@ -4,11 +4,10 @@ import TimetableManager from "../managers/TimetableManager"
 
 import RouteButton from "../components/RouteButton"
 
-import { SearchPanel , SearchPanelVariant} from "react-search-panel";
+import { SearchPanel, SearchPanelVariant } from "react-search-panel";
 
-import {throttle} from "../utils/func"
-
-import {HISTORY} from "../utils/history"
+import { HISTORY } from "../utils/history"
+import { Link } from 'react-router-dom';
 
 class InstituteSelection extends React.Component {
 	constructor(props) {
@@ -25,18 +24,23 @@ class InstituteSelection extends React.Component {
 			<div className="institute-selection">
 				{this.state.institutes.length === 0 && !this.state.isError && <div className="loading">Отримання даних з lpnu.ua</div>}
 				{this.state.isError && <div className="error">Помилка при отриманні даних!</div>}
-				{this.state.institutes.length > 0 && <SearchPanel placeholder="Група..."
-														className="search"
-														choices={TimetableManager.searchGroups(this.state.search).map(g => {return {key: g, description: g}})}
-														onChange={event => this.setState({search: event.target.value})}
-														value={this.state.search}
-														shadow
-														onSelectionChange={this.searchSelect}
-														variant={SearchPanelVariant.link}
-														float
-														width={"100%"}
-														maximumHeight={250}/>}
-				{this.state.institutes.map(institute => <RouteButton to={`/${institute}`} text={institute} key={institute}/>)}
+				{this.state.institutes.length > 0 && (
+					<div className="search-row">
+						<SearchPanel placeholder="Група..."
+							className="search"
+							choices={TimetableManager.searchGroups(this.state.search).map(g => { return { key: g, description: g } })}
+							onChange={event => this.setState({ search: event.target.value })}
+							value={this.state.search}
+							shadow
+							onSelectionChange={this.searchSelect}
+							variant={SearchPanelVariant.link}
+							float
+							width={"100%"}
+							maximumHeight={250} />
+						<Link to={'/settings'} className="settings-link">⚙️</Link>
+					</div>
+				)}
+				{this.state.institutes.map(institute => <RouteButton to={`/${institute}`} text={institute} key={institute} />)}
 			</div>
 		)
 	}
@@ -55,10 +59,10 @@ class InstituteSelection extends React.Component {
 
 	searchSelect = choices => {
 		const selected = choices[0];
-		if(!selected) return;
+		if (!selected) return;
 		const group = selected.key;
 		HISTORY.push({
-			hash: "/"+group
+			hash: "/" + group
 		});
 	}
 }

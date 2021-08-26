@@ -3,7 +3,8 @@
     padding: 15px;
     animation: fade-in 0.15s ease-in-out;
 
-    .loading, .error {
+    .loading,
+    .error {
         font-size: 20px;
         text-align: center;
         grid-column: 1/3;
@@ -26,39 +27,55 @@
     // BRUH
     // Search component doesn't have top-level class
 
-    & > div:first-child {
+    .search-row {
         grid-column: 1/3;
-        align-self: center;
-        position: relative;
+        display: flex;
 
-        form > div:first-child {
-            background-color: var(--searchBackgroundColor);
-            border: 1px solid var(--searchBackgroundColor);
+        & > div:first-child {
+            flex-grow: 1;
+            align-self: center;
+            position: relative;
 
-            input {
-                color: var(--textColor);
-            }
-        }
-
-        #ResultContainer {
-            width: 100%;
-
-            fieldset {
-                overflow-y: overlay;
-                overflow-x: hidden;
+            form > div:first-child {
                 background-color: var(--searchBackgroundColor);
-                div {
-                    margin: 6px 0;
-                    width: 100%;
+                border: 1px solid var(--searchBackgroundColor);
 
-                    & > a {
-                        display: block;
+                input {
+                    color: var(--textColor);
+                }
+            }
+
+            #ResultContainer {
+                width: 100%;
+
+                fieldset {
+                    overflow-y: overlay;
+                    overflow-x: hidden;
+                    background-color: var(--searchBackgroundColor);
+                    div {
+                        margin: 6px 0;
                         width: 100%;
-                        color: var(--textColor);
-                        font-weight: bold;
+
+                        & > a {
+                            display: block;
+                            width: 100%;
+                            color: var(--textColor);
+                            font-weight: bold;
+                        }
                     }
                 }
             }
+        }
+
+        .settings-link {
+            height: 44px;
+            width: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+
+            margin-left: 0.5rem;
         }
     }
 
