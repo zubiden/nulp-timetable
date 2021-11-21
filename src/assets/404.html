@@ -9,7 +9,7 @@
 
         <script type="text/javascript">
             window.onload = function() {
-                const basePath = "/nulp-timetable/"
+                const basePath = window.location.hostname.includes("github.io") ? "/nulp-timetable/" : "";
                 const encodedHash = "%23";
 
                 let currentPath = location.pathname.substring(basePath.length);
