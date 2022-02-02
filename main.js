@@ -2,7 +2,7 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 923:
+/***/ 587:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
 
@@ -1365,7 +1365,6 @@ const LessonFragment = ({
 
 /* harmony default export */ const src_components_TimetableComponent = (TimetableComponent_TimetableComponent);
 ;// CONCATENATED MODULE: ./src/routes/Timetable.js
-function Timetable_defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
 
@@ -1375,193 +1374,127 @@ function Timetable_defineProperty(obj, key, value) { if (key in obj) { Object.de
 
 
 
-class Timetable extends react.Component {
-  constructor(props) {
-    super(props);
+const Timetable = ({
+  group,
+  subgroup
+}) => {
+  const [timetable, setTimetable] = react.useState([]);
+  const [week, setWeek] = react.useState(getWeek() % 2 === 0 ? 2 : 1);
+  const [isError, setIsError] = react.useState(false);
+  const navigate = (0,react_router/* useNavigate */.s0)();
 
-    Timetable_defineProperty(this, "tryToScrollToCurrentDay", el => {
-      // yeah, naming!
-      const width = el.getBoundingClientRect().width;
-      let currentDay = getCurrentUADate().getDay(); // 0 - Sunday
-
-      if (currentDay === 0) currentDay = 7;
-      const inTimetable = this.getFilteredTimetable().some(el => el.day === currentDay);
-
-      if (inTimetable) {
-        el.scrollTo((currentDay - 1) * width, 0);
-      }
-    });
-
-    Timetable_defineProperty(this, "updateTimetable", () => {
-      this.setState({
-        isError: false
-      });
-      managers_TimetableManager.updateTimetable(this.props.group).then(timetable => {
-        this.setState({
-          timetable
-        });
-      }).catch(err => {
-        this.setState({
-          isError: true
-        });
-      });
-    });
-
-    this.state = {
-      timetable: [],
-      week: getWeek() % 2 === 0 ? 2 : 1,
-      // NULP doesn't like standardization
-      isError: false
-    };
-    this.checkSubgroup();
-  }
-
-  render() {
-    const time = managers_TimetableManager.getCachedTime(this.props.group);
-    return /*#__PURE__*/react.createElement("div", {
-      className: "timetable-page"
-    }, /*#__PURE__*/react.createElement("div", {
-      className: "header"
-    }, /*#__PURE__*/react.createElement(src_components_RouteButton, {
-      className: "back",
-      to: "/",
-      text: "\u2190 \u041F\u043E\u0432\u0435\u0440\u043D\u0443\u0442\u0438\u0441\u044F"
-    }), /*#__PURE__*/react.createElement("div", {
-      className: "location"
-    }, this.props.group)), /*#__PURE__*/react.createElement("div", {
-      className: "controls"
-    }, this.hasSubgroups() ? /*#__PURE__*/react.createElement(src_components_TwoSideButton, {
-      one: "I \u043F\u0456\u0434\u0433\u0440\u0443\u043F\u0430",
-      two: "II \u043F\u0456\u0434\u0433\u0440\u0443\u043F\u0430",
-      default: this.getActiveSubgroup() === 1 ? "one" : "two",
-      onSelect: side => this.setSubgroup(side === "two" ? 2 : 1)
-    }) : /*#__PURE__*/react.createElement("div", {
-      className: "spreader"
-    }), /*#__PURE__*/react.createElement("div", {
-      className: "spreader"
-    }), this.hasWeeks() ? /*#__PURE__*/react.createElement(src_components_TwoSideButton, {
-      one: "\u041F\u043E \u0447\u0438\u0441\u0435\u043B\u044C\u043D\u0438\u043A\u0443",
-      two: "\u041F\u043E \u0437\u043D\u0430\u043C\u0435\u043D\u043D\u0438\u043A\u0443",
-      default: this.state.week === 1 ? "one" : "two",
-      onSelect: side => this.setState({
-        week: side === "two" ? 2 : 1
-      })
-    }) : /*#__PURE__*/react.createElement("div", {
-      className: "spreader"
-    })), this.state.timetable.length === 0 && !this.state.isError && /*#__PURE__*/react.createElement("div", {
-      className: "loading"
-    }, "\u041E\u0442\u0440\u0438\u043C\u0430\u043D\u043D\u044F \u0434\u0430\u043D\u0438\u0445 \u0437 lpnu.ua"), this.state.isError && /*#__PURE__*/react.createElement("div", {
-      className: "error"
-    }, "\u041F\u043E\u043C\u0438\u043B\u043A\u0430 \u043F\u0440\u0438 \u043E\u0442\u0440\u0438\u043C\u0430\u043D\u043D\u0456 \u0434\u0430\u043D\u0438\u0445!"), this.state.timetable.length > 0 && /*#__PURE__*/react.createElement(src_components_TimetableComponent, {
-      onReady: this.tryToScrollToCurrentDay,
-      elements: this.prepareTimetable()
-    }), /*#__PURE__*/react.createElement("div", {
-      className: "timetable-footer"
-    }, /*#__PURE__*/react.createElement("button", {
-      className: "reload",
-      onClick: this.updateTimetable
-    }, "\u041E\u043D\u043E\u0432\u0438\u0442\u0438"), /*#__PURE__*/react.createElement("div", {
-      className: "last-cached"
-    }, time ? "Востаннє: " + new Date(time).toLocaleString() : "")));
-  }
-
-  componentDidMount() {
-    this.fetchData(this.props.group);
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.group !== prevProps.group) {
-      this.setState({
-        timetable: [] // clear
-
-      });
-      this.fetchData(this.props.group);
-    }
-
-    this.checkSubgroup();
-  }
-
-  checkSubgroup() {
-    if (this.props.subgroup !== 1 && this.props.subgroup !== 2) {
-      this.setSubgroup(null); // empty
-    }
-  }
-
-  hasSubgroups() {
-    if (this.state.timetable?.length) {
-      return this.state.timetable.find(el => el.isFirstSubgroup !== el.isSecondSubgroup);
-    }
-
-    return false;
-  }
-
-  hasWeeks() {
-    if (this.state.timetable?.length) {
-      return this.state.timetable.find(el => el.isFirstWeek !== el.isSecondWeek);
-    }
-
-    return false;
-  }
-
-  fetchData(group) {
-    managers_TimetableManager.getTimetable(group).then(timetable => {
-      this.setState({
-        timetable
-      });
-    }).catch(err => {
-      this.setState({
-        isError: true
-      });
-    });
-  }
-
-  getFilteredTimetable() {
-    return this.state.timetable.filter(lesson => this.testWeek(lesson) && this.testSubgroup(lesson));
-  }
-
-  prepareTimetable() {
-    const filtered = this.getFilteredTimetable();
-    return filtered.map(el => {
-      return {
-        day: el.day,
-        position: el.number,
-        lesson: el
-      };
-    });
-  }
-
-  // writing this at 4:50AM, refractor required
-  testWeek(lesson) {
-    if (this.state.week === 1 && lesson.isFirstWeek) return true;
-    if (this.state.week === 2 && lesson.isSecondWeek) return true;
-    return false;
-  }
-
-  testSubgroup(lesson) {
-    if (this.getActiveSubgroup() === 1 && lesson.isFirstSubgroup) return true;
-    if (this.getActiveSubgroup() === 2 && lesson.isSecondSubgroup) return true;
-    return false;
-  }
-
-  getActiveSubgroup() {
-    return this.props.subgroup === 2 ? 2 : 1;
-  }
-
-  setSubgroup(sub) {
+  const setSubgroup = subgroup => {
     let hash = getHash();
     let path = hash.split("/");
 
-    if (sub) {
-      path[1] = sub;
+    if (subgroup) {
+      path[1] = subgroup;
     } else {
       path.splice(1, 1);
     }
 
-    HISTORY.push({
-      hash: "/" + path.join("/")
-    });
-  }
+    navigate("/" + path.join("/"));
+  };
 
+  const updateTimetable = () => {
+    setIsError(false);
+    setTimetable([]);
+    managers_TimetableManager.getTimetable(group).then(timetable => {
+      setTimetable(timetable);
+    }).catch(err => {
+      setIsError(true);
+    });
+  };
+
+  (0,react.useEffect)(() => {
+    updateTimetable();
+  }, [group]);
+  (0,react.useEffect)(() => {
+    if (subgroup !== 1 && subgroup !== 2) {
+      setSubgroup(undefined);
+    } else {
+      setSubgroup(subgroup);
+    }
+  }, [subgroup]);
+  const filteredTimetable = (0,react.useMemo)(() => {
+    return timetable.filter(lesson => testWeek(lesson, week) && testSubgroup(lesson, subgroup)).map(el => ({
+      day: el.day,
+      position: el.number,
+      lesson: el
+    }));
+  }, [timetable, subgroup, week]);
+
+  const tryToScrollToCurrentDay = el => {
+    // yeah, naming!
+    const width = el.getBoundingClientRect().width;
+    let currentDay = getCurrentUADate().getDay(); // 0 - Sunday
+
+    if (currentDay === 0) currentDay = 7;
+    const inTimetable = filteredTimetable.some(el => el.day === currentDay);
+
+    if (inTimetable) {
+      el.scrollTo((currentDay - 1) * width, 0);
+    }
+  };
+
+  const hasSubgroups = timetable.find(el => el.isFirstSubgroup !== el.isSecondSubgroup);
+  const hasWeeks = timetable.find(el => el.isFirstWeek !== el.isSecondWeek);
+  const time = managers_TimetableManager.getCachedTime(group);
+  return /*#__PURE__*/react.createElement("div", {
+    className: "timetable-page"
+  }, /*#__PURE__*/react.createElement("div", {
+    className: "header"
+  }, /*#__PURE__*/react.createElement(src_components_RouteButton, {
+    className: "back",
+    to: "/",
+    text: "\u2190 \u041F\u043E\u0432\u0435\u0440\u043D\u0443\u0442\u0438\u0441\u044F"
+  }), /*#__PURE__*/react.createElement("div", {
+    className: "location"
+  }, group)), /*#__PURE__*/react.createElement("div", {
+    className: "controls"
+  }, hasSubgroups ? /*#__PURE__*/react.createElement(src_components_TwoSideButton, {
+    one: "I \u043F\u0456\u0434\u0433\u0440\u0443\u043F\u0430",
+    two: "II \u043F\u0456\u0434\u0433\u0440\u0443\u043F\u0430",
+    default: subgroup === 2 ? "two" : "one",
+    onSelect: side => setSubgroup(side === "two" ? 2 : 1)
+  }) : /*#__PURE__*/react.createElement("div", {
+    className: "spreader"
+  }), /*#__PURE__*/react.createElement("div", {
+    className: "spreader"
+  }), hasWeeks ? /*#__PURE__*/react.createElement(src_components_TwoSideButton, {
+    one: "\u041F\u043E \u0447\u0438\u0441\u0435\u043B\u044C\u043D\u0438\u043A\u0443",
+    two: "\u041F\u043E \u0437\u043D\u0430\u043C\u0435\u043D\u043D\u0438\u043A\u0443",
+    default: week === 2 ? "two" : "one",
+    onSelect: side => setWeek(side === "two" ? 2 : 1)
+  }) : /*#__PURE__*/react.createElement("div", {
+    className: "spreader"
+  })), timetable.length === 0 && !isError && /*#__PURE__*/react.createElement("div", {
+    className: "loading"
+  }, "\u041E\u0442\u0440\u0438\u043C\u0430\u043D\u043D\u044F \u0434\u0430\u043D\u0438\u0445 \u0437 lpnu.ua"), isError && /*#__PURE__*/react.createElement("div", {
+    className: "error"
+  }, "\u041F\u043E\u043C\u0438\u043B\u043A\u0430 \u043F\u0440\u0438 \u043E\u0442\u0440\u0438\u043C\u0430\u043D\u043D\u0456 \u0434\u0430\u043D\u0438\u0445!"), timetable.length > 0 && /*#__PURE__*/react.createElement(src_components_TimetableComponent, {
+    onReady: tryToScrollToCurrentDay,
+    elements: filteredTimetable
+  }), /*#__PURE__*/react.createElement("div", {
+    className: "timetable-footer"
+  }, /*#__PURE__*/react.createElement("button", {
+    className: "reload",
+    onClick: updateTimetable
+  }, "\u041E\u043D\u043E\u0432\u0438\u0442\u0438"), /*#__PURE__*/react.createElement("div", {
+    className: "last-cached"
+  }, time ? "Востаннє: " + new Date(time).toLocaleString() : "")));
+};
+
+function testWeek(lesson, week) {
+  if (week === 1 && lesson.isFirstWeek) return true;
+  if (week === 2 && lesson.isSecondWeek) return true;
+  return false;
+}
+
+function testSubgroup(lesson, subgroup) {
+  if (subgroup === 1 && lesson.isFirstSubgroup) return true;
+  if (subgroup === 2 && lesson.isSecondSubgroup) return true;
+  return false;
 }
 
 function getWeek() {
@@ -1655,6 +1588,16 @@ const TimetableFragment = ({
 };
 
 /* harmony default export */ const routes_Settings = (Settings);
+;// CONCATENATED MODULE: ./src/utils/hooks.js
+
+function useForceUpdate() {
+  const [, dispatch] = (0,react.useState)(Object.create(null)); // Turn dispatch(required_parameter) into dispatch().
+
+  const memoizedDispatch = (0,react.useCallback)(() => {
+    dispatch(Object.create(null));
+  }, [dispatch]);
+  return memoizedDispatch;
+}
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/components/LoadingComponent.scss
 var LoadingComponent = __webpack_require__(778);
 ;// CONCATENATED MODULE: ./src/components/LoadingComponent.scss
@@ -1710,16 +1653,16 @@ const LoadingComponent_LoadingComponent = ({
 
 
 
+
 const App = () => {
-  const [updateIndex, forceUpdate] = (0,react.useState)(0);
+  const forceUpdate = useForceUpdate();
   const location = (0,react_router/* useLocation */.TH)();
   const hash = getHash(location);
   let path = hash.split("/");
   let root = path[0];
   (0,react.useLayoutEffect)(() => {
     const unlisten = HISTORY.listen(() => {
-      console.error('HISTORY changed');
-      forceUpdate(updateIndex + 1);
+      forceUpdate();
     });
     return () => unlisten();
   }, []);
@@ -2133,7 +2076,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, ":root{--textColor: black;--textHoverCo
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [751], () => (__webpack_require__(923)))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [751], () => (__webpack_require__(587)))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()
