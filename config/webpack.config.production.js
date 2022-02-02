@@ -1,6 +1,5 @@
-const config = require('./webpack.config.js')
-const TerserPlugin = require("terser-webpack-plugin");
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const config = require('./webpack.config.js');
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 
 config.mode = 'production'
 
@@ -9,7 +8,7 @@ config.optimization = {
     chunks: 'all'
   },
   minimize: true,
-  minimizer: [new TerserPlugin(), new OptimizeCSSAssetsPlugin({})],
+  minimizer: [new CssMinimizerPlugin()],
 }
 
 module.exports = config

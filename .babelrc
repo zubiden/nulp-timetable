@@ -1,9 +1,26 @@
 {
-  "presets": ["@babel/preset-env", "@babel/preset-react"],
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "useBuiltIns": "usage",
+        "corejs": 3,
+        "targets": {
+          "firefox": "90"
+        }
+      }
+    ],
+    "@babel/preset-react"
+  ],
   "plugins": [
-    ["module-resolver", {
-      "root": ["./src"]
-    }],
-    "@babel/plugin-proposal-class-properties",
+    [
+      "module-resolver",
+      {
+        "root": [
+          "./src"
+        ]
+      }
+    ],
+    "@babel/plugin-proposal-class-properties"
   ]
 }

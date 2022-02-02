@@ -12,7 +12,8 @@ const config = {
   entry: [path.resolve(__dirname, '../src/index.js')],
   output: {
     path: path.resolve(__dirname, '../build'),
-    filename: 'bundle.js',
+    filename: '[name].js',
+    chunkFilename: '[id].[chunkhash].js',
   },
   mode: 'development',
   resolve: {
@@ -25,18 +26,20 @@ const config = {
     new HtmlWebpackPlugin({
       template: path.join(SRC_DIRECTORY, 'index.html')
     }),
-    new CopyWebpackPlugin([
-      { from: path.join(SRC_DIRECTORY, 'assets'), to: path.join(ROOT_DIRECTORY, 'build') }
-    ]),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: path.join(SRC_DIRECTORY, 'assets'), to: path.join(ROOT_DIRECTORY, 'build') }
+      ]
+    }),
     new webpack.DefinePlugin({
-        __PUBLIC_URL__: JSON.stringify(process.env.PUBLIC_URL || ""),
+      __PUBLIC_URL__: JSON.stringify(process.env.PUBLIC_URL || ""),
     }),
     new WorkboxPlugin.GenerateSW({
-       // these options encourage the ServiceWorkers to get in there fast
-       // and not allow any straggling "old" SWs to hang around
-       clientsClaim: true,
-       skipWaiting: true,
-     }),
+      // these options encourage the ServiceWorkers to get in there fast
+      // and not allow any straggling "old" SWs to hang around
+      clientsClaim: true,
+      skipWaiting: true,
+    }),
   ],
   module: {
     rules: [

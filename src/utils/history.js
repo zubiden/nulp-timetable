@@ -44,6 +44,6 @@ export function openInNewTab(url) {
 	window.open(url, "_black");
 }
 
-export function getHash() {
-	return decodeURI(window.location.hash).replace('#/', '').replace('#', ''); // #/Settings -> Settings
+export function getHash(location = window.location) {
+	return decodeURI(location.hash || location.pathname).replace(/^#?\//, '').replace('#', ''); // #/Settings -> Settings
 }
