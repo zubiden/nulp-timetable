@@ -7,13 +7,13 @@ import InstituteSelection from "./routes/InstituteSelection"
 import GroupSelection from "./routes/GroupSelection"
 import Timetable from "./routes/Timetable"
 import Settings from "./routes/Settings"
+import { useForceUpdate } from './utils/hooks'
 
 import LoadingComponent from "./components/LoadingComponent"
-
 import TimetableManager from "./managers/TimetableManager"
 
 const App = () => {
-    const [updateIndex, forceUpdate] = useState(0);
+    const forceUpdate = useForceUpdate();
     const location = useLocation();
     const hash = getHash(location);
 
@@ -22,8 +22,7 @@ const App = () => {
 
     useLayoutEffect(() => {
         const unlisten = HISTORY.listen(() => {
-            console.error('HISTORY changed');
-            forceUpdate(updateIndex + 1);
+            forceUpdate();
         });
         return () => unlisten();
     }, []);

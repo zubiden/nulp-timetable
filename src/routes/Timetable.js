@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useMemo } from 'react'
 
 import TimetableManager from "../managers/TimetableManager"
 import { HISTORY, getHash } from "../utils/history"
@@ -7,169 +7,112 @@ import { getCurrentUADate } from '../utils/date'
 import RouteButton from "../components/RouteButton"
 import TwoSideButton from "../components/TwoSideButton"
 import TimetableComponent from "../components/TimetableComponent"
+import { useNavigate } from 'react-router-dom'
 
-class Timetable extends React.Component {
-    constructor(props) {
-        super(props);
+const Timetable = ({ group, subgroup }) => {
+    const [timetable, setTimetable] = React.useState([]);
+    const [week, setWeek] = React.useState(getWeek() % 2 === 0 ? 2 : 1);
+    const [isError, setIsError] = React.useState(false);
 
-        this.state = {
-            timetable: [],
-            week: getWeek() % 2 === 0 ? 2 : 1, // NULP doesn't like standardization
-            isError: false,
-        }
+    const navigate = useNavigate();
 
-        this.checkSubgroup();
-    }
-
-    render() {
-    	const time = TimetableManager.getCachedTime(this.props.group);
-        return (
-            <div className="timetable-page">
-		        <div className="header">
-		            <RouteButton className="back" to="/" text="← Повернутися" />
-		            <div className="location">{this.props.group}</div>
-		        </div>
-		        <div className="controls">
-		            { this.hasSubgroups() ? 
-                        <TwoSideButton one="I підгрупа" two="II підгрупа" default={this.getActiveSubgroup() === 1 ? "one" : "two"} onSelect={side => this.setSubgroup(side === "two" ? 2 : 1)}/>
-                        :
-                        <div className="spreader"/>
-                    }
-                    <div className="spreader"/>
-		            { this.hasWeeks() ? 
-                        <TwoSideButton one="По чисельнику" two="По знаменнику" default={this.state.week === 1 ? "one" : "two"} onSelect={side => this.setState({week: side === "two" ? 2 : 1})}/>
-                        :
-                        <div className="spreader"/>
-                    }
-                </div>
-		        {this.state.timetable.length === 0 && !this.state.isError && <div className="loading">Отримання даних з lpnu.ua</div>}
-		        {this.state.isError && <div className="error">Помилка при отриманні даних!</div>}
-		        {this.state.timetable.length > 0 && <TimetableComponent onReady={this.tryToScrollToCurrentDay} elements={this.prepareTimetable()}/>}
-		        <div className="timetable-footer">
-		        	<button className="reload" onClick={this.updateTimetable}>Оновити</button>
-		        	<div className="last-cached">{time ? ("Востаннє: "+new Date(time).toLocaleString()) : ""}</div>
-		        </div>
-	        </div>
-        )
-    }
-
-    componentDidMount() {
-        this.fetchData(this.props.group);
-    }
-
-    componentDidUpdate(prevProps) {
-        if (this.props.group !== prevProps.group) {
-            this.setState({
-                timetable: [] // clear
-            })
-            this.fetchData(this.props.group)
-        }
-
-        this.checkSubgroup();
-    }
-
-    checkSubgroup() {
-        if(this.props.subgroup !== 1 && this.props.subgroup !== 2) {
-            this.setSubgroup(null); // empty
-        }
-    }
-
-    hasSubgroups() {
-        if (this.state.timetable?.length) {
-            return this.state.timetable.find(el => el.isFirstSubgroup !== el.isSecondSubgroup);
-        }
-        return false;
-    }
-
-    hasWeeks() {
-        if (this.state.timetable?.length) {
-            return this.state.timetable.find(el => el.isFirstWeek !== el.isSecondWeek);
-        }
-        return false;
-    }
-
-    fetchData(group) {
-        TimetableManager.getTimetable(group).then(timetable => {
-            this.setState({
-                timetable
-            })
-        }).catch(err => {
-            this.setState({
-                isError: true
-            })
-        })
-    }
-
-    getFilteredTimetable() {
-        return this.state.timetable.filter(lesson => this.testWeek(lesson) && this.testSubgroup(lesson));
-    }
-
-    prepareTimetable() {
-        const filtered = this.getFilteredTimetable();
-        return filtered.map(el => {
-            return {
-                day: el.day,
-                position: el.number,
-                lesson: el
-            }
-        });
-    }
-
-    tryToScrollToCurrentDay = (el) => { // yeah, naming!
-    	const width = el.getBoundingClientRect().width;
-
-    	let currentDay = getCurrentUADate().getDay(); // 0 - Sunday
-    	if(currentDay === 0) currentDay = 7;
-    	const inTimetable = this.getFilteredTimetable().some(el => el.day === currentDay);
-    	if(inTimetable) {
-    		el.scrollTo((currentDay-1)*width, 0);
-    	}
-    }
-
-    // writing this at 4:50AM, refractor required
-    testWeek(lesson) {
-        if (this.state.week === 1 && lesson.isFirstWeek) return true;
-        if (this.state.week === 2 && lesson.isSecondWeek) return true;
-        return false;
-    }
-
-    testSubgroup(lesson) {
-        if (this.getActiveSubgroup() === 1 && lesson.isFirstSubgroup) return true;
-        if (this.getActiveSubgroup() === 2 && lesson.isSecondSubgroup) return true;
-        return false;
-    }
-
-    getActiveSubgroup() {
-        return this.props.subgroup === 2 ? 2 : 1;
-    }
-
-    setSubgroup(sub) {
+    const setSubgroup = (subgroup) => {
         let hash = getHash();
         let path = hash.split("/");
-        if(sub) {
-           path[1] = sub;
+        if (subgroup) {
+            path[1] = subgroup;
         } else {
             path.splice(1, 1);
         }
-        HISTORY.push({
-            hash: "/"+path.join("/")
+        navigate("/" + path.join("/"))
+    };
+
+    const updateTimetable = () => {
+        setIsError(false);
+        setTimetable([]);
+        TimetableManager.getTimetable(group).then(timetable => {
+            setTimetable(timetable);
+        }).catch(err => {
+            setIsError(true);
         })
+    };
+
+    useEffect(() => {
+        updateTimetable();
+    }, [group]);
+
+    useEffect(() => {
+        if (subgroup !== 1 && subgroup !== 2) {
+            setSubgroup(undefined);
+        } else {
+            setSubgroup(subgroup);
+        }
+    }, [subgroup]);
+
+    const filteredTimetable = useMemo(() => {
+        return timetable.filter(lesson => testWeek(lesson, week) && testSubgroup(lesson, subgroup))
+            .map(el => ({
+                day: el.day,
+                position: el.number,
+                lesson: el
+            }));
+    }, [timetable, subgroup, week]);
+
+    const tryToScrollToCurrentDay = (el) => { // yeah, naming!
+        const width = el.getBoundingClientRect().width;
+
+        let currentDay = getCurrentUADate().getDay(); // 0 - Sunday
+        if (currentDay === 0) currentDay = 7;
+        const inTimetable = filteredTimetable.some(el => el.day === currentDay);
+        if (inTimetable) {
+            el.scrollTo((currentDay - 1) * width, 0);
+        }
     }
 
-    updateTimetable = () => {
-    	this.setState({
-    		isError: false
-    	})
-    	TimetableManager.updateTimetable(this.props.group).then(timetable => {
-    		this.setState({
-    			timetable
-    		})
-    	}).catch(err => {
-    		this.setState({
-    			isError: true
-    		})
-    	})
-    }
+    const hasSubgroups = timetable.find(el => el.isFirstSubgroup !== el.isSecondSubgroup);
+    const hasWeeks = timetable.find(el => el.isFirstWeek !== el.isSecondWeek);
+
+    const time = TimetableManager.getCachedTime(group);
+    return (
+        <div className="timetable-page">
+            <div className="header">
+                <RouteButton className="back" to="/" text="← Повернутися" />
+                <div className="location">{group}</div>
+            </div>
+            <div className="controls">
+                {hasSubgroups ?
+                    <TwoSideButton one="I підгрупа" two="II підгрупа" default={subgroup === 2 ? "two" : "one"} onSelect={side => setSubgroup(side === "two" ? 2 : 1)} />
+                    :
+                    <div className="spreader" />
+                }
+                <div className="spreader" />
+                {hasWeeks ?
+                    <TwoSideButton one="По чисельнику" two="По знаменнику" default={week === 2 ? "two" : "one"} onSelect={side => setWeek(side === "two" ? 2 : 1)} />
+                    :
+                    <div className="spreader" />
+                }
+            </div>
+            {timetable.length === 0 && !isError && <div className="loading">Отримання даних з lpnu.ua</div>}
+            {isError && <div className="error">Помилка при отриманні даних!</div>}
+            {timetable.length > 0 && <TimetableComponent onReady={tryToScrollToCurrentDay} elements={filteredTimetable} />}
+            <div className="timetable-footer">
+                <button className="reload" onClick={updateTimetable}>Оновити</button>
+                <div className="last-cached">{time ? ("Востаннє: " + new Date(time).toLocaleString()) : ""}</div>
+            </div>
+        </div>
+    )
+}
+
+function testWeek(lesson, week) {
+    if (week === 1 && lesson.isFirstWeek) return true;
+    if (week === 2 && lesson.isSecondWeek) return true;
+    return false;
+}
+
+function testSubgroup(lesson, subgroup) {
+    if (subgroup === 1 && lesson.isFirstSubgroup) return true;
+    if (subgroup === 2 && lesson.isSecondSubgroup) return true;
+    return false;
 }
 
 function getWeek() {
