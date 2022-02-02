@@ -1,8 +1,8 @@
 import React from 'react'
-import classNames from "classnames"
 
 import TimetableManager from "../managers/TimetableManager"
 import { HISTORY, getHash } from "../utils/history"
+import { getCurrentUADate } from '../utils/date'
 
 import RouteButton from "../components/RouteButton"
 import TwoSideButton from "../components/TwoSideButton"
@@ -118,7 +118,7 @@ class Timetable extends React.Component {
     tryToScrollToCurrentDay = (el) => { // yeah, naming!
     	const width = el.getBoundingClientRect().width;
 
-    	let currentDay = new Date().getDay(); // 0 - Sunday
+    	let currentDay = getCurrentUADate().getDay(); // 0 - Sunday
     	if(currentDay === 0) currentDay = 7;
     	const inTimetable = this.getFilteredTimetable().some(el => el.day === currentDay);
     	if(inTimetable) {
@@ -173,7 +173,7 @@ class Timetable extends React.Component {
 }
 
 function getWeek() {
-    const date = new Date();
+    const date = getCurrentUADate();
     date.setHours(0, 0, 0, 0);
     // Thursday in current week decides the year.
     date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);

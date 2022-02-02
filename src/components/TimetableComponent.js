@@ -1,6 +1,7 @@
 import React from 'react'
 
 import classNames from "classnames";
+import { getCurrentUADate } from '../utils/date';
 
 import "./TimetableComponent.scss";
 
@@ -60,7 +61,7 @@ class TimetableComponent extends React.Component {
     }
 
     getActiveLesson() {
-    	let date = new Date(); //current
+    	let date = getCurrentUADate();
     	let currentDay = date.getDay(); // 0 - Sunday
     	if(currentDay === 0) currentDay = 7; // костиль
 
@@ -88,7 +89,7 @@ class TimetableComponent extends React.Component {
     }
 
     timeToDate(time) {
-    	let date = new Date();
+    	let date = getCurrentUADate();
     	let [hours, minutes] = time.split(':');
     	date.setHours(hours);
     	date.setMinutes(minutes)
