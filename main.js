@@ -1430,7 +1430,9 @@ const Timetable = ({
     let currentDay = getCurrentUADate().getDay(); // 0 - Sunday
 
     if (currentDay === 0) currentDay = 7;
-    const inTimetable = filteredTimetable.some(el => el.day === currentDay);
+    const inTimetable = filteredTimetable.some(({
+      day
+    }) => Math.max(day, 5) >= currentDay);
 
     if (inTimetable) {
       el.scrollTo((currentDay - 1) * width, 0);
