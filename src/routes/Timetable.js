@@ -1,13 +1,13 @@
 import React, { useEffect, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import TimetableManager from "../managers/TimetableManager"
-import { HISTORY, getHash } from "../utils/history"
+import { getHash } from "../utils/history"
 import { getCurrentUADate } from '../utils/date'
 
 import RouteButton from "../components/RouteButton"
 import TwoSideButton from "../components/TwoSideButton"
 import TimetableComponent from "../components/TimetableComponent"
-import { useNavigate } from 'react-router-dom'
 
 const Timetable = ({ group, subgroup }) => {
     const [timetable, setTimetable] = React.useState([]);
@@ -24,13 +24,13 @@ const Timetable = ({ group, subgroup }) => {
         } else {
             path.splice(1, 1);
         }
-        navigate("/" + path.join("/"))
+        navigate(path.join("/"))
     };
 
     const updateTimetable = () => {
         setIsError(false);
         setTimetable([]);
-        TimetableManager.getTimetable(group).then(timetable => {
+        TimetableManager.getTimetable(group, false).then(timetable => {
             setTimetable(timetable);
         }).catch(err => {
             setIsError(true);

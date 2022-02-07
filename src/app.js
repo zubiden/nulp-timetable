@@ -1,5 +1,5 @@
-import React, { useLayoutEffect, useState } from 'react'
-import { HISTORY, getHash } from "./utils/history"
+import React from 'react'
+import { getHash } from "./utils/history"
 
 import { HashRouter, Routes, Route, useLocation } from "react-router-dom"
 
@@ -7,25 +7,16 @@ import InstituteSelection from "./routes/InstituteSelection"
 import GroupSelection from "./routes/GroupSelection"
 import Timetable from "./routes/Timetable"
 import Settings from "./routes/Settings"
-import { useForceUpdate } from './utils/hooks'
 
 import LoadingComponent from "./components/LoadingComponent"
 import TimetableManager from "./managers/TimetableManager"
 
 const App = () => {
-    const forceUpdate = useForceUpdate();
     const location = useLocation();
     const hash = getHash(location);
 
     let path = hash.split("/");
     let root = path[0];
-
-    useLayoutEffect(() => {
-        const unlisten = HISTORY.listen(() => {
-            forceUpdate();
-        });
-        return () => unlisten();
-    }, []);
 
     let content = null;
     if (root) {

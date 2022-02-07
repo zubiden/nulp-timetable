@@ -1,6 +1,6 @@
 import {createBrowserHistory} from "history";
 
-export const HISTORY = createBrowserHistory();
+const HISTORY = createBrowserHistory();
 
 export function setSearchParameters(paramsObject) {
 	const url = new URL(window.location.href);

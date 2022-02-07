@@ -1,7 +1,6 @@
 import React from 'react'
 
 import TimetableManager from "../managers/TimetableManager"
-import {HISTORY} from "../utils/history"
 
 import RouteButton from "../components/RouteButton"
 import CategoryButton from "../components/CategoryButton"
