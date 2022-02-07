@@ -599,86 +599,65 @@ const RouteButton_RouteButton = ({
 // EXTERNAL MODULE: ./node_modules/react-search-panel/dist/index.esm.js
 var index_esm = __webpack_require__(850);
 ;// CONCATENATED MODULE: ./src/routes/InstituteSelection.js
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
 
 
 
 
-
-
-class InstituteSelection extends react.Component {
-  constructor(props) {
-    super(props);
-
-    _defineProperty(this, "searchSelect", choices => {
-      const selected = choices[0];
-      if (!selected) return;
-      const group = selected.key;
-      HISTORY.push({
-        hash: "/" + group
-      });
-    });
-
-    this.state = {
-      institutes: [],
-      isError: false,
-      search: ""
-    };
-  }
-
-  render() {
-    return /*#__PURE__*/react.createElement("div", {
-      className: "institute-selection"
-    }, this.state.institutes.length === 0 && !this.state.isError && /*#__PURE__*/react.createElement("div", {
-      className: "loading"
-    }, "\u041E\u0442\u0440\u0438\u043C\u0430\u043D\u043D\u044F \u0434\u0430\u043D\u0438\u0445 \u0437 lpnu.ua"), this.state.isError && /*#__PURE__*/react.createElement("div", {
-      className: "error"
-    }, "\u041F\u043E\u043C\u0438\u043B\u043A\u0430 \u043F\u0440\u0438 \u043E\u0442\u0440\u0438\u043C\u0430\u043D\u043D\u0456 \u0434\u0430\u043D\u0438\u0445!"), this.state.institutes.length > 0 && /*#__PURE__*/react.createElement("div", {
-      className: "search-row"
-    }, /*#__PURE__*/react.createElement(index_esm/* SearchPanel */.E, {
-      placeholder: "\u0413\u0440\u0443\u043F\u0430...",
-      className: "search",
-      choices: managers_TimetableManager.searchGroups(this.state.search).map(g => {
-        return {
-          key: g,
-          description: g
-        };
-      }),
-      onChange: event => this.setState({
-        search: event.target.value
-      }),
-      value: this.state.search,
-      shadow: true,
-      onSelectionChange: this.searchSelect,
-      variant: index_esm/* SearchPanelVariant.link */.j.link,
-      float: true,
-      width: "100%",
-      maximumHeight: 250
-    }), /*#__PURE__*/react.createElement(react_router_dom/* Link */.rU, {
-      to: '/settings',
-      className: "settings-link"
-    }, "\u2699\uFE0F")), this.state.institutes.map(institute => /*#__PURE__*/react.createElement(src_components_RouteButton, {
-      to: `/${institute}`,
-      text: institute,
-      key: institute
-    })));
-  }
-
-  componentDidMount() {
+const InstituteSelection = () => {
+  const [institutes, setInstitutes] = react.useState([]);
+  const [isError, setIsError] = react.useState(false);
+  const [search, setSearch] = react.useState("");
+  const navigate = (0,react_router/* useNavigate */.s0)();
+  (0,react.useEffect)(() => {
     managers_TimetableManager.getInstitutes().then(institutes => {
-      this.setState({
-        institutes
-      });
+      setInstitutes(institutes);
     }).catch(err => {
-      this.setState({
-        isError: true
-      });
+      setIsError(true);
     });
-  }
+  }, []);
 
-}
+  const handleSelect = choices => {
+    const selected = choices[0];
+    if (!selected) return;
+    const group = selected.key;
+    navigate(group);
+  };
+
+  const choices = managers_TimetableManager.searchGroups(search).map(g => ({
+    key: g,
+    description: g
+  }));
+  return /*#__PURE__*/react.createElement("div", {
+    className: "institute-selection"
+  }, institutes.length === 0 && !isError && /*#__PURE__*/react.createElement("div", {
+    className: "loading"
+  }, "\u041E\u0442\u0440\u0438\u043C\u0430\u043D\u043D\u044F \u0434\u0430\u043D\u0438\u0445 \u0437 lpnu.ua"), isError && /*#__PURE__*/react.createElement("div", {
+    className: "error"
+  }, "\u041F\u043E\u043C\u0438\u043B\u043A\u0430 \u043F\u0440\u0438 \u043E\u0442\u0440\u0438\u043C\u0430\u043D\u043D\u0456 \u0434\u0430\u043D\u0438\u0445!"), institutes.length > 0 && /*#__PURE__*/react.createElement("div", {
+    className: "search-row"
+  }, /*#__PURE__*/react.createElement(index_esm/* SearchPanel */.E, {
+    placeholder: "\u0413\u0440\u0443\u043F\u0430...",
+    className: "search",
+    choices: choices,
+    onChange: event => setSearch(event.target.value),
+    value: search,
+    shadow: true,
+    onSelectionChange: handleSelect,
+    variant: index_esm/* SearchPanelVariant.link */.j.link,
+    float: true,
+    width: "100%",
+    maximumHeight: 250
+  }), /*#__PURE__*/react.createElement(react_router_dom/* Link */.rU, {
+    to: '/settings',
+    className: "settings-link"
+  }, "\u2699\uFE0F")), institutes.map(institute => /*#__PURE__*/react.createElement(src_components_RouteButton, {
+    to: `/${institute}`,
+    text: institute,
+    key: institute
+  })));
+};
 
 /* harmony default export */ const routes_InstituteSelection = (InstituteSelection);
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/components/CategoryButton.scss
@@ -744,7 +723,6 @@ class CategoryButton_CategoryButton extends react.Component {
 
 /* harmony default export */ const src_components_CategoryButton = (CategoryButton_CategoryButton);
 ;// CONCATENATED MODULE: ./src/routes/GroupSelection.js
-
 
 
 
@@ -903,7 +881,7 @@ var TwoSideButton_update = injectStylesIntoStyleTag_default()(TwoSideButton/* de
        /* harmony default export */ const components_TwoSideButton = (TwoSideButton/* default */.Z && TwoSideButton/* default.locals */.Z.locals ? TwoSideButton/* default.locals */.Z.locals : undefined);
 
 ;// CONCATENATED MODULE: ./src/components/TwoSideButton.js
-function TwoSideButton_defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
 
@@ -914,7 +892,7 @@ class TwoSideButton_TwoSideButton extends react.Component {
   constructor(props) {
     super(props);
 
-    TwoSideButton_defineProperty(this, "onResize", throttle(() => {
+    _defineProperty(this, "onResize", throttle(() => {
       this.setState({
         sliderStyles: this._calculateSliderStyles(this.state.side)
       });
@@ -1393,13 +1371,13 @@ const Timetable = ({
       path.splice(1, 1);
     }
 
-    navigate("/" + path.join("/"));
+    navigate(path.join("/"));
   };
 
   const updateTimetable = () => {
     setIsError(false);
     setTimetable([]);
-    managers_TimetableManager.getTimetable(group).then(timetable => {
+    managers_TimetableManager.getTimetable(group, false).then(timetable => {
       setTimetable(timetable);
     }).catch(err => {
       setIsError(true);
@@ -1511,60 +1489,64 @@ function getWeek() {
 }
 
 /* harmony default export */ const routes_Timetable = (Timetable);
+;// CONCATENATED MODULE: ./src/utils/hooks.js
+
+function useForceUpdate() {
+  const [, dispatch] = (0,react.useState)(Object.create(null)); // Turn dispatch(required_parameter) into dispatch().
+
+  const memoizedDispatch = (0,react.useCallback)(() => {
+    dispatch(Object.create(null));
+  }, [dispatch]);
+  return memoizedDispatch;
+}
 ;// CONCATENATED MODULE: ./src/routes/Settings.js
 
 
 
 
 
-class Settings extends react.Component {
-  constructor(props) {
-    super(props);
-  }
 
-  render() {
-    let items = managers_TimetableManager.getCachedTimetables().map(el => /*#__PURE__*/react.createElement(TimetableFragment, {
-      key: JSON.stringify(el),
-      cachedTimetable: el,
-      onUpdate: () => this.forceUpdate()
-    }));
-    return /*#__PURE__*/react.createElement("div", {
-      className: "settings"
-    }, /*#__PURE__*/react.createElement("div", {
-      className: "header"
-    }, /*#__PURE__*/react.createElement(src_components_RouteButton, {
-      to: "/",
-      className: "back",
-      text: "\u2190 \u041F\u043E\u0432\u0435\u0440\u043D\u0443\u0442\u0438\u0441\u044F"
-    })), /*#__PURE__*/react.createElement("div", {
-      className: "timetables"
-    }, items.length > 0 ? items : "Збережені розклади відсутні!"), /*#__PURE__*/react.createElement("div", {
-      className: "flex-grow"
-    }), /*#__PURE__*/react.createElement("div", {
-      className: "footer"
-    }, /*#__PURE__*/react.createElement("div", {
-      className: "clear",
-      onClick: () => {
-        managers_TimetableManager.clearCache();
-        this.forceUpdate();
-      }
-    }, "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u0438 \u0434\u0430\u043D\u0456")));
-  }
-
-}
+const Settings = () => {
+  const forceUpdate = useForceUpdate();
+  const items = managers_TimetableManager.getCachedTimetables().map(el => /*#__PURE__*/react.createElement(TimetableFragment, {
+    key: JSON.stringify(el),
+    cachedTimetable: el,
+    onUpdate: () => forceUpdate()
+  }));
+  return /*#__PURE__*/react.createElement("div", {
+    className: "settings"
+  }, /*#__PURE__*/react.createElement("div", {
+    className: "header"
+  }, /*#__PURE__*/react.createElement(src_components_RouteButton, {
+    to: "/",
+    className: "back",
+    text: "\u2190 \u041F\u043E\u0432\u0435\u0440\u043D\u0443\u0442\u0438\u0441\u044F"
+  })), /*#__PURE__*/react.createElement("div", {
+    className: "timetables"
+  }, items.length > 0 ? items : "Збережені розклади відсутні!"), /*#__PURE__*/react.createElement("div", {
+    className: "flex-grow"
+  }), /*#__PURE__*/react.createElement("div", {
+    className: "footer"
+  }, /*#__PURE__*/react.createElement("div", {
+    className: "clear",
+    onClick: () => {
+      managers_TimetableManager.clearCache();
+      forceUpdate();
+    }
+  }, "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u0438 \u0434\u0430\u043D\u0456")));
+};
 
 const TimetableFragment = ({
   cachedTimetable,
   onUpdate
 }) => {
+  const navigate = (0,react_router/* useNavigate */.s0)();
   return /*#__PURE__*/react.createElement("div", {
     className: "cached-timetable"
   }, /*#__PURE__*/react.createElement("div", {
     className: "info",
     onClick: () => {
-      HISTORY.push({
-        hash: "/" + cachedTimetable.group
-      });
+      navigate(cachedTimetable.group);
     }
   }, /*#__PURE__*/react.createElement("div", {
     className: "name"
@@ -1590,16 +1572,6 @@ const TimetableFragment = ({
 };
 
 /* harmony default export */ const routes_Settings = (Settings);
-;// CONCATENATED MODULE: ./src/utils/hooks.js
-
-function useForceUpdate() {
-  const [, dispatch] = (0,react.useState)(Object.create(null)); // Turn dispatch(required_parameter) into dispatch().
-
-  const memoizedDispatch = (0,react.useCallback)(() => {
-    dispatch(Object.create(null));
-  }, [dispatch]);
-  return memoizedDispatch;
-}
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/components/LoadingComponent.scss
 var LoadingComponent = __webpack_require__(778);
 ;// CONCATENATED MODULE: ./src/components/LoadingComponent.scss
@@ -1655,19 +1627,11 @@ const LoadingComponent_LoadingComponent = ({
 
 
 
-
 const App = () => {
-  const forceUpdate = useForceUpdate();
   const location = (0,react_router/* useLocation */.TH)();
   const hash = getHash(location);
   let path = hash.split("/");
   let root = path[0];
-  (0,react.useLayoutEffect)(() => {
-    const unlisten = HISTORY.listen(() => {
-      forceUpdate();
-    });
-    return () => unlisten();
-  }, []);
   let content = null;
 
   if (root) {
