@@ -1037,75 +1037,97 @@ function TimetableComponent_defineProperty(obj, key, value) { if (key in obj) { 
         content
 */
 
-class TimetableComponent_TimetableComponent extends react.Component {
-  constructor(...args) {
-    super(...args);
+function timeToDate(time) {
+  let date = getCurrentUADate();
+  let [hours, minutes] = time.split(':');
+  date.setHours(hours);
+  date.setMinutes(minutes);
+  date.setSeconds(0);
+  return date;
+}
 
-    TimetableComponent_defineProperty(this, "ref", /*#__PURE__*/react.createRef());
+function getWeekday(number) {
+  switch (number) {
+    case 1:
+      return "Понеділок";
+
+    case 2:
+      return "Вівторок";
+
+    case 3:
+      return "Середа";
+
+    case 4:
+      return "Четвер";
+
+    case 5:
+      return "П'ятниця";
+
+    case 6:
+      return "Субота";
+
+    case 7:
+      return "Неділя";
+
+    default:
+      return "Не вдалося отримати день";
+  }
+}
+
+function getHours(num) {
+  switch (num) {
+    case 1:
+      return ["8:30", "10:05"];
+
+    case 2:
+      return ["10:20", "11:55"];
+
+    case 3:
+      return ["12:10", "13:45"];
+
+    case 4:
+      return ["14:15", "15:50"];
+
+    case 5:
+      return ["16:00", "17:35"];
+
+    case 6:
+      return ["17:40", "19:15"];
+
+    case 7:
+      return ["19:20", "20:55"];
+
+    case 8:
+      return ["21:00", "22:35"];
+
+    default:
+      return ["", ""];
+  }
+}
+
+function findSize(elements) {
+  let days = 5;
+  let rows = 5;
+
+  for (let element of elements) {
+    if (element.day > days) days = element.day;
+    if (element.position > rows) rows = element.position;
   }
 
-  render() {
-    const {
-      elements
-    } = this.props;
-    const sizes = this.findSize(elements);
-    return /*#__PURE__*/react.createElement("div", {
-      className: classnames_default()({
-        timetable: true,
-        "has-saturday": sizes.days === 6,
-        "has-sunday": sizes.days === 7 // Не заздрю...
+  return {
+    days: Math.min(days, 7),
+    rows
+  };
+}
 
-      }),
-      ref: this.ref
-    }, this.makeTable(sizes, elements));
-  }
+const TimetableComponent_TimetableComponent = ({
+  elements,
+  onReady
+}) => {
+  const ref = (0,react.useRef)();
+  const sizes = findSize(elements);
 
-  componentDidMount() {
-    if (this.props.onReady) this.props.onReady(this.ref.current);
-  }
-
-  makeTable(size, elements) {
-    const cells = [];
-    let active = this.getActiveLesson();
-
-    for (let i = 0; i < size.rows + 1; i++) {
-      for (let j = 0; j < size.days + 1; j++) {
-        // first row
-        if (i === 0) {
-          if (j === 0) {
-            cells.push( /*#__PURE__*/react.createElement(EmptyCell, {
-              key: "first"
-            })); // first cell always empty
-          } else {
-            const weekday = this.getWeekday(j);
-            cells.push( /*#__PURE__*/react.createElement(DayCell, {
-              weekday: weekday,
-              key: weekday
-            }));
-          }
-        } else {
-          if (j === 0) {
-            cells.push( /*#__PURE__*/react.createElement(NumerationCell, {
-              key: i,
-              num: i,
-              time: this.getHours(i)
-            }));
-          } else {
-            const lesson = elements.find(el => el.position === i && el.day === j)?.lesson;
-            cells.push( /*#__PURE__*/react.createElement(LessonCell, {
-              key: i + ":" + j,
-              lesson: lesson,
-              active: active.day === j && active.num === i
-            }));
-          }
-        }
-      }
-    }
-
-    return cells;
-  }
-
-  getActiveLesson() {
+  const getActiveLesson = () => {
     let date = getCurrentUADate();
     let currentDay = date.getDay(); // 0 - Sunday
 
@@ -1115,8 +1137,8 @@ class TimetableComponent_TimetableComponent extends react.Component {
 
     for (let i = 1; i < 9; i++) {
       // 1-8
-      let endH = this.getHours(i)[1];
-      let end = this.timeToDate(endH);
+      let endH = getHours(i)[1];
+      let end = timeToDate(endH);
 
       if (date < end && (!prevEnd || date > prevEnd)) {
         return {
@@ -1132,93 +1154,62 @@ class TimetableComponent_TimetableComponent extends react.Component {
       day: -1,
       num: -1
     };
-  }
+  };
 
-  timeToDate(time) {
-    let date = getCurrentUADate();
-    let [hours, minutes] = time.split(':');
-    date.setHours(hours);
-    date.setMinutes(minutes);
-    date.setSeconds(0);
-    return date;
-  } // TODO переписати ці світчі на щось нормальне
+  const makeTable = (size, elements) => {
+    const cells = [];
+    let active = getActiveLesson();
 
-
-  getWeekday(number) {
-    switch (number) {
-      case 1:
-        return "Понеділок";
-
-      case 2:
-        return "Вівторок";
-
-      case 3:
-        return "Середа";
-
-      case 4:
-        return "Четвер";
-
-      case 5:
-        return "П'ятниця";
-
-      case 6:
-        return "Субота";
-
-      case 7:
-        return "Неділя";
-
-      default:
-        return "Не вдалося отримати день";
-    }
-  }
-
-  getHours(num) {
-    switch (num) {
-      case 1:
-        return ["8:30", "10:05"];
-
-      case 2:
-        return ["10:20", "11:55"];
-
-      case 3:
-        return ["12:10", "13:45"];
-
-      case 4:
-        return ["14:15", "15:50"];
-
-      case 5:
-        return ["16:00", "17:35"];
-
-      case 6:
-        return ["17:40", "19:15"];
-
-      case 7:
-        return ["19:20", "20:55"];
-
-      case 8:
-        return ["21:00", "22:35"];
-
-      default:
-        return ["", ""];
-    }
-  }
-
-  findSize(elements) {
-    let days = 5;
-    let rows = 5;
-
-    for (let element of elements) {
-      if (element.day > days) days = element.day;
-      if (element.position > rows) rows = element.position;
+    for (let i = 0; i < size.rows + 1; i++) {
+      for (let j = 0; j < size.days + 1; j++) {
+        // first row
+        if (i === 0) {
+          if (j === 0) {
+            cells.push( /*#__PURE__*/react.createElement(EmptyCell, {
+              key: "first"
+            })); // first cell always empty
+          } else {
+            const weekday = getWeekday(j);
+            cells.push( /*#__PURE__*/react.createElement(DayCell, {
+              weekday: weekday,
+              key: weekday
+            }));
+          }
+        } else {
+          if (j === 0) {
+            cells.push( /*#__PURE__*/react.createElement(NumerationCell, {
+              key: i,
+              num: i,
+              time: getHours(i)
+            }));
+          } else {
+            const lesson = elements.find(el => el.position === i && el.day === j)?.lesson;
+            cells.push( /*#__PURE__*/react.createElement(LessonCell, {
+              key: i + ":" + j,
+              lesson: lesson,
+              active: active.day === j && active.num === i
+            }));
+          }
+        }
+      }
     }
 
-    return {
-      days: Math.min(days, 7),
-      rows
-    };
-  }
+    return cells;
+  };
 
-}
+  (0,react.useEffect)(() => {
+    if (elements) onReady?.(ref.current);
+  }, [elements]);
+  return /*#__PURE__*/react.createElement("div", {
+    className: classnames_default()({
+      timetable: true,
+      "has-saturday": sizes.days === 6,
+      "has-sunday": sizes.days === 7 // Не заздрю...
+
+    }),
+    ref: ref
+  }, makeTable(sizes, elements));
+};
 
 const NumerationCell = ({
   num,
