@@ -841,7 +841,8 @@ const getTimezoneOffset = (timeZone, date = new Date()) => {
     timeZone,
     timeStyle: "long"
   }).split(" ").slice(-1)[0];
-  const dateString = date.toString();
+  const utc = date.toUTCString();
+  const dateString = utc.substring(0, utc.length - 4);
   const offset = Date.parse(`${dateString} UTC`) - Date.parse(`${dateString} ${tz}`); // return UTC offset in millis
 
   return offset;
