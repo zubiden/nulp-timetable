@@ -249,7 +249,7 @@ const LessonFragment = ({ lesson }) => {
             <div className="subject">{lesson.subject}</div>
             <div className="lecturer">{lesson.lecturer}</div>
             <div className="location">{lesson.location.trim()}</div>
-            {lesson.url && <a className="url" href={lesson.url} target="_blank" rel="noopener">Посилання</a>}
+            {lesson.urls.map((url) => (<a className="url" href={url} key={url} target="_blank" rel="noopener">Посилання</a>))}
         </div>
     )
 }

@@ -155,14 +155,14 @@ function parsePair(pair) {
 
 function parseLessonData(element) {
 	const texts = []
-	let lessonUrl = "";
+	let lessonUrls = [];
 	let br = false;
 	for(let node of Array.from(element.childNodes)) {
 		if(node.nodeName === "BR") {
 			if(br) texts.push(""); //sometimes text is skipped with sequenced <br/> 
 			br = true;
 		} else if(node.nodeName==="SPAN") {
-			lessonUrl = node.querySelector("a").href;
+			lessonUrls.push(node.querySelector("a").href);
 			br = false;
 		} else {
 			br = false;
@@ -173,7 +173,7 @@ function parseLessonData(element) {
 		subject: texts[0] || "",
 		lecturer: texts[1] || "",
 		location: texts[2] || "",
-		url: lessonUrl,
+		urls: lessonUrls,
 	}
 }
 
