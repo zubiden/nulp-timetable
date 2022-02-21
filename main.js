@@ -282,7 +282,7 @@ function parsePair(pair) {
 
 function parseLessonData(element) {
   const texts = [];
-  let lessonUrl = "";
+  let lessonUrls = [];
   let br = false;
 
   for (let node of Array.from(element.childNodes)) {
@@ -291,7 +291,7 @@ function parseLessonData(element) {
 
       br = true;
     } else if (node.nodeName === "SPAN") {
-      lessonUrl = node.querySelector("a").href;
+      lessonUrls.push(node.querySelector("a").href);
       br = false;
     } else {
       br = false;
@@ -303,7 +303,7 @@ function parseLessonData(element) {
     subject: texts[0] || "",
     lecturer: texts[1] || "",
     location: texts[2] || "",
-    url: lessonUrl
+    urls: lessonUrls
   };
 }
 
@@ -1325,12 +1325,13 @@ const LessonFragment = ({
     className: "lecturer"
   }, lesson.lecturer), /*#__PURE__*/react.createElement("div", {
     className: "location"
-  }, lesson.location.trim()), lesson.url && /*#__PURE__*/react.createElement("a", {
+  }, lesson.location.trim()), lesson.urls.map(url => /*#__PURE__*/react.createElement("a", {
     className: "url",
-    href: lesson.url,
+    href: url,
+    key: url,
     target: "_blank",
     rel: "noopener"
-  }, "\u041F\u043E\u0441\u0438\u043B\u0430\u043D\u043D\u044F"));
+  }, "\u041F\u043E\u0441\u0438\u043B\u0430\u043D\u043D\u044F")));
 };
 
 /* harmony default export */ const src_components_TimetableComponent = (TimetableComponent_TimetableComponent);
