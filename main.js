@@ -1370,7 +1370,7 @@ const Timetable = ({
   const updateTimetable = () => {
     setIsError(false);
     setTimetable([]);
-    managers_TimetableManager.getTimetable(group, false).then(timetable => {
+    managers_TimetableManager.getTimetable(group).then(timetable => {
       setTimetable(timetable);
     }).catch(err => {
       setIsError(true);
