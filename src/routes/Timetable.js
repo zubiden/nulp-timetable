@@ -30,7 +30,7 @@ const Timetable = ({ group, subgroup }) => {
     const updateTimetable = () => {
         setIsError(false);
         setTimetable([]);
-        TimetableManager.getTimetable(group, false).then(timetable => {
+        TimetableManager.getTimetable(group).then(timetable => {
             setTimetable(timetable);
         }).catch(err => {
             setIsError(true);
