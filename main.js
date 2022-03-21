@@ -1367,10 +1367,10 @@ const Timetable = ({
     navigate(path.join("/"));
   };
 
-  const updateTimetable = () => {
+  const updateTimetable = (checkCache = false) => {
     setIsError(false);
     setTimetable([]);
-    managers_TimetableManager.getTimetable(group).then(timetable => {
+    managers_TimetableManager.getTimetable(group, checkCache).then(timetable => {
       setTimetable(timetable);
     }).catch(err => {
       setIsError(true);
@@ -1378,7 +1378,7 @@ const Timetable = ({
   };
 
   (0,react.useEffect)(() => {
-    updateTimetable();
+    updateTimetable(true);
   }, [group]);
   (0,react.useEffect)(() => {
     if (subgroup !== 1 && subgroup !== 2) {
