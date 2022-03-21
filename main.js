@@ -1452,7 +1452,7 @@ const Timetable = ({
     className: "timetable-footer"
   }, /*#__PURE__*/react.createElement("button", {
     className: "reload",
-    onClick: updateTimetable
+    onClick: () => updateTimetable()
   }, "\u041E\u043D\u043E\u0432\u0438\u0442\u0438"), /*#__PURE__*/react.createElement("div", {
     className: "last-cached"
   }, time ? "Востаннє: " + new Date(time).toLocaleString() : "")));
