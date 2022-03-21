@@ -27,10 +27,10 @@ const Timetable = ({ group, subgroup }) => {
         navigate(path.join("/"))
     };
 
-    const updateTimetable = () => {
+    const updateTimetable = (checkCache = false) => {
         setIsError(false);
         setTimetable([]);
-        TimetableManager.getTimetable(group).then(timetable => {
+        TimetableManager.getTimetable(group, checkCache).then(timetable => {
             setTimetable(timetable);
         }).catch(err => {
             setIsError(true);
@@ -38,7 +38,7 @@ const Timetable = ({ group, subgroup }) => {
     };
 
     useEffect(() => {
-        updateTimetable();
+        updateTimetable(true);
     }, [group]);
 
     useEffect(() => {
