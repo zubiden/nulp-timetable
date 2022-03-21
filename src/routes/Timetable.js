@@ -96,7 +96,7 @@ const Timetable = ({ group, subgroup }) => {
             {isError && <div className="error">Помилка при отриманні даних!</div>}
             {timetable.length > 0 && <TimetableComponent onReady={tryToScrollToCurrentDay} elements={filteredTimetable} />}
             <div className="timetable-footer">
-                <button className="reload" onClick={updateTimetable}>Оновити</button>
+                <button className="reload" onClick={() => updateTimetable()}>Оновити</button>
                 <div className="last-cached">{time ? ("Востаннє: " + new Date(time).toLocaleString()) : ""}</div>
             </div>
         </div>
