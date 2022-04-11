@@ -2,7 +2,7 @@ import {timeout} from "./func"
 
 const NULP = "https://student.lpnu.ua/";
 const TIMETABLE_SUFFIX = "students_schedule";
-const PROXY = "https://playcraft.com.ua/proxy.php?url=";
+const PROXY = "https://api.codetabs.com/v1/proxy?quest=";
 
 const FALLBACK_URL = "https://raw.githubusercontent.com/zubiden/nulp-timetable-data/data/";
 
@@ -14,8 +14,8 @@ export async function fetchHtml(params = {}) {
 	for(let key in params) {
 		originalUrl.searchParams.set(key, params[key])
 	}
-	let encoded = encodeURIComponent(originalUrl.href);
-	const proxiedUrl = PROXY+encoded;
+	// let encoded = encodeURIComponent(originalUrl.href);
+	const proxiedUrl = PROXY + originalUrl.href;
 
 	return timeout(TIMEOUT, fetch(proxiedUrl)).then(response => {
 		if(!response.ok) throw Error(response.statusText);
