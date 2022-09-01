@@ -1,7 +1,8 @@
 import React from 'react'
-import { getHash } from "./utils/history"
-
 import { HashRouter, Routes, Route, useLocation } from "react-router-dom"
+
+import { getHash } from "./utils/history"
+import { useForceUpdate } from './utils/hooks'
 
 import InstituteSelection from "./routes/InstituteSelection"
 import GroupSelection from "./routes/GroupSelection"
@@ -14,6 +15,7 @@ import TimetableManager from "./managers/TimetableManager"
 const App = () => {
     const location = useLocation();
     const hash = getHash(location);
+    const forceUpdate = useForceUpdate();
 
     let path = hash.split("/");
     let root = path[0];
@@ -32,14 +34,14 @@ const App = () => {
 
             if (TimetableManager.getCachedInstitutes().length === 0) {
                 TimetableManager.requestInstitutes().then(inst => {
-                    this.forceUpdate();
+                    forceUpdate();
                 })
                 content = <LoadingComponent text="Отримання списку інститутів..." />
             }
 
             if (TimetableManager.getCachedGroups().length === 0) {
                 TimetableManager.requestGroups().then(inst => {
-                    this.forceUpdate();
+                    forceUpdate();
                 })
                 content = <LoadingComponent text="Отримання списку груп..." />
             }
