@@ -3,7 +3,8 @@
     [
       "@babel/preset-env",
       {
-        "corejs": 3,
+        "useBuiltIns": "usage",
+        "corejs": "3.25",
         "targets": {
           "firefox": "100"
         }

@@ -1,6 +1,6 @@
 {
   "name": "nulp-timetable",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "NULP timetable",
   "main": "''",
   "engines": {
@@ -23,6 +23,7 @@
   "license": "MIT",
   "homepage": "https://zubiden.github.io/nulp-timetable",
   "dependencies": {
+    "core-js": "^3.25.5",
     "css-minimizer-webpack-plugin": "^3.4.1",
     "history": "^5.2.0",
     "idb": "^7.0.0",
