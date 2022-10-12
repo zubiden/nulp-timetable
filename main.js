@@ -10,6 +10,10 @@
 var react = __webpack_require__(294);
 // EXTERNAL MODULE: ./node_modules/react-dom/index.js
 var react_dom = __webpack_require__(935);
+// EXTERNAL MODULE: ./node_modules/react-router/dist/index.js
+var dist = __webpack_require__(250);
+// EXTERNAL MODULE: ./node_modules/react-router-dom/dist/index.js
+var react_router_dom_dist = __webpack_require__(655);
 // EXTERNAL MODULE: ./node_modules/history/index.js + 1 modules
 var node_modules_history = __webpack_require__(682);
 ;// CONCATENATED MODULE: ./src/utils/history.js
@@ -18,26 +22,21 @@ const HISTORY = (0,node_modules_history/* createBrowserHistory */.lX)();
 function setSearchParameters(paramsObject) {
   const url = new URL(window.location.href);
   url.search = "";
-
   for (let key in paramsObject) {
     url.searchParams.set(key, paramsObject[key]);
   }
-
   replaceHistoryState(url.href);
 }
 function addSearchParameters(paramsObject, overwrite = true) {
   const url = new URL(window.location.href);
-
   for (let key in paramsObject) {
     let value = url.searchParams.get(key);
-
     if (value && !overwrite) {
       continue;
     } else {
       url.searchParams.set(key, paramsObject[key]);
     }
   }
-
   replaceHistoryState(url.href);
 }
 function replaceHistoryState(newUrl) {
@@ -48,12 +47,10 @@ function replaceHistoryState(newUrl) {
 function getCurrentParameters() {
   const url = new URL(window.location.href);
   let result = {};
-
   for (let entry of url.searchParams.entries()) {
     const [key, value] = entry;
     result[key] = value;
   }
-
   return result;
 }
 function openInNewTab(url) {
@@ -62,10 +59,17 @@ function openInNewTab(url) {
 function getHash(location = window.location) {
   return decodeURI(location.hash || location.pathname).replace(/^#?\//, '').replace('#', ''); // #/Settings -> Settings
 }
-// EXTERNAL MODULE: ./node_modules/react-router-dom/index.js
-var react_router_dom = __webpack_require__(711);
-// EXTERNAL MODULE: ./node_modules/react-router/index.js
-var react_router = __webpack_require__(974);
+;// CONCATENATED MODULE: ./src/utils/hooks.js
+
+function useForceUpdate() {
+  const [, dispatch] = (0,react.useState)(Object.create(null));
+
+  // Turn dispatch(required_parameter) into dispatch().
+  const memoizedDispatch = (0,react.useCallback)(() => {
+    dispatch(Object.create(null));
+  }, [dispatch]);
+  return memoizedDispatch;
+}
 // EXTERNAL MODULE: ./node_modules/idb/build/index.js + 1 modules
 var build = __webpack_require__(424);
 ;// CONCATENATED MODULE: ./src/utils/storage.js
@@ -77,7 +81,6 @@ function useKeval(dbPromise, storeName) {
   if (cachedKevals[storeName]) {
     return cachedKevals[storeName];
   }
-
   return cachedKevals[storeName] = {
     keys: () => dbPromise.then(db => db.getAllKeys(storeName)),
     clear: () => dbPromise.then(db => db.clear(storeName)),
@@ -90,7 +93,6 @@ const DEFAULT_DB_PROMISE = (0,build/* openDB */.X3)(defaultDbName, 2, {
   upgrade(db, oldVersion, newVersion, transaction) {
     db.createObjectStore(defaultStoreName);
   }
-
 });
 const storage = useKeval(DEFAULT_DB_PROMISE, defaultStoreName);
 /* harmony default export */ const utils_storage = (storage);
@@ -102,7 +104,6 @@ const throttle = (callable, period, context = null) => {
     if (!context) {
       context = this;
     }
-
     if (time) {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => {
@@ -142,12 +143,10 @@ const TIMEOUT = 3000; //3s
 async function fetchHtml(params = {}) {
   let baseUrl = NULP + TIMETABLE_SUFFIX;
   const originalUrl = new URL(baseUrl);
-
   for (let key in params) {
     originalUrl.searchParams.set(key, params[key]);
-  } // let encoded = encodeURIComponent(originalUrl.href);
-
-
+  }
+  // let encoded = encodeURIComponent(originalUrl.href);
   const proxiedUrl = PROXY + originalUrl.href;
   return timeout(TIMEOUT, fetch(proxiedUrl)).then(response => {
     if (!response.ok) throw Error(response.statusText);
@@ -175,12 +174,10 @@ async function getGroups(departmentparent_abbrname_selective = "All") {
     return groups;
   }).catch(err => {
     let fallback = FALLBACK_URL + `institutes/${departmentparent_abbrname_selective}.json`;
-
     if (departmentparent_abbrname_selective === "All") {
       //get all groups
       fallback = FALLBACK_URL + `groups.json`;
     }
-
     return fetch(fallback).then(response => {
       if (!response.ok) throw Error(err);
       return response.json();
@@ -193,7 +190,6 @@ async function getTimetable(studygroup_abbrname_selective = "All", departmentpar
     departmentparent_abbrname_selective,
     studygroup_abbrname_selective,
     semestrduration: 1 // Why, NULP?
-
   }).then(html => {
     const content = parseAndGetOne(html, ".view-content");
     const days = Array.from(content.children).map(parseDay).flat(1);
@@ -205,6 +201,7 @@ async function getTimetable(studygroup_abbrname_selective = "All", departmentpar
     });
   });
 }
+
 /*
 	day
 		header
@@ -218,19 +215,15 @@ async function getTimetable(studygroup_abbrname_selective = "All", departmentpar
 
 function parseDay(day) {
   const dayText = day.querySelector(".view-grouping-header");
-
   if (!dayText) {
     throw Error("Got wrong DOM structure for day!");
   }
-
   const dayNumber = dayToNumber(dayText.textContent);
   const contentChildren = day.querySelector(".view-grouping-content").children;
   let dayLessons = [];
   let currentLessonNumber = 0;
-
   for (let i = 0; i < contentChildren.length; i++) {
     const child = contentChildren[i];
-
     if (child.classList.contains("stud_schedule")) {
       const lessons = parsePair(child);
       if (currentLessonNumber === 0) console.warn("Lesson number is 0!", child);
@@ -243,18 +236,16 @@ function parseDay(day) {
       currentLessonNumber = Number.parseInt(child.textContent);
     }
   }
-
   return dayLessons;
 }
-
 function parsePair(pair) {
   const lessonElements = pair.querySelectorAll(".group_content");
   const lessons = [];
-
   for (let element of lessonElements) {
     const id = element.parentElement.id;
     const meta = parseLessonId(id);
     const data = parseLessonData(element);
+
     /*
     	isFirstWeek
     	isSecondWeek
@@ -268,7 +259,8 @@ function parsePair(pair) {
     	number
     */
 
-    const lesson = { ...data,
+    const lesson = {
+      ...data,
       type: tryToGetType(data.location),
       ...meta,
       day: -1,
@@ -276,19 +268,15 @@ function parsePair(pair) {
     };
     lessons.push(lesson);
   }
-
   return lessons;
 }
-
 function parseLessonData(element) {
   const texts = [];
   let lessonUrls = [];
   let br = false;
-
   for (let node of Array.from(element.childNodes)) {
     if (node.nodeName === "BR") {
       if (br) texts.push(""); //sometimes text is skipped with sequenced <br/> 
-
       br = true;
     } else if (node.nodeName === "SPAN") {
       lessonUrls.push(node.querySelector("a").href);
@@ -298,7 +286,6 @@ function parseLessonData(element) {
       texts.push(node.textContent);
     }
   }
-
   return {
     subject: texts[0] || "",
     lecturer: texts[1] || "",
@@ -306,16 +293,13 @@ function parseLessonData(element) {
     urls: lessonUrls
   };
 }
-
 function parseLessonId(id) {
   const split = id.split("_");
   let subgroup = "all";
   let week = "full";
-
   if (id.includes("sub")) {
     subgroup = Number.parseInt(split[1]);
   }
-
   week = split[split.length - 1];
   return {
     isFirstWeek: week === "full" || week === "chys",
@@ -324,7 +308,6 @@ function parseLessonId(id) {
     isSecondSubgroup: subgroup === "all" || subgroup === 2
   };
 }
-
 function tryToGetType(location) {
   location = location.toLowerCase();
   if (location.includes("практична")) return "practical";
@@ -332,41 +315,31 @@ function tryToGetType(location) {
   if (location.includes("конс.")) return "consultation";
   return "lecture";
 }
-
 function dayToNumber(day) {
   switch (day?.toLowerCase()) {
     case "пн":
       return 1;
-
     case "вт":
       return 2;
-
     case "ср":
       return 3;
-
     case "чт":
       return 4;
-
     case "пт":
       return 5;
-
     case "сб":
       return 6;
-
     case "нд":
       return 7;
-
     default:
       return -1;
   }
 }
-
 function parseAndGetOne(html, css) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, "text/html");
   return doc.querySelector(css);
 }
-
 const parser = {
   fetchHtml,
   getInstitutes,
@@ -384,37 +357,29 @@ class TimetableManager {
     this.institutes = (await utils_storage.getItem("institutes")) || [];
     this.groups = (await utils_storage.getItem("groups")) || [];
     this.timetables = (await utils_storage.getItem("cached_timetables")) || [];
-
     if (this.timetables.length > 0) {
       let first = this.timetables[0];
-
       if (first.institute) {
         // old cache, clearing...
         console.log("Clearing old cache...");
         this.clearCache();
       }
     }
-
     const institutesUpdated = await utils_storage.getItem("institutes_updated");
-
     if (this.institutes.length === 0 || needsUpdate(institutesUpdated)) {
       console.log("Downloading institute list...");
       this.requestInstitutes(true);
     }
-
     const groupsUpdated = await utils_storage.getItem("groups_updated");
-
     if (this.groups.length === 0 || needsUpdate(groupsUpdated)) {
       console.log("Downloading group list...");
       this.requestGroups(true);
     }
   }
-
   async requestInstitutes(force) {
     if (this.institutesRequest) return this.institutesRequest;
     return this.institutesRequest = this.getInstitutes(force);
   }
-
   async getInstitutes(force) {
     if (this.institutes.length > 0 && !force) return this.institutes;
     const institutes = await utils_parser.getInstitutes();
@@ -423,52 +388,39 @@ class TimetableManager {
     this.institutes = institutes;
     return institutes;
   }
-
   async requestGroups(force) {
     // only for all
     if (this.groupsRequest) return this.groupsRequest;
     return this.groupsRequest = this.getGroups(undefined, force);
   }
-
   async getGroups(institute, force) {
     let suffix = institute ? "_" + institute : "";
     if (!institute && this.groups.length > 0 && !force) return this.groups;
-
     if (institute) {
       const cached = await utils_storage.getItem("groups" + suffix);
-
       if (cached && !force) {
         const updated = await utils_storage.getItem("groups" + suffix + "_updated");
         if (!needsUpdate(updated)) return cached;
       }
     }
-
     const groups = await utils_parser.getGroups(institute);
-
     if (!institute) {
       this.groups = groups;
     }
-
     utils_storage.setItem("groups" + suffix, groups);
     utils_storage.setItem("groups" + suffix + "_updated", Date.now());
     return groups;
   }
-
   async getTimetable(group, checkCache = true) {
     const data = this.timetables.find(el => el.group === group);
-
     if (checkCache && data && !needsUpdate(data.time)) {
       return utils_storage.getItem("timetable_" + group);
     }
-
     const timetable = await utils_parser.getTimetable(group);
-
     if (!timetable) {
       throw Error(`Failed to get timetable! Group: ${group}, checkCache: ${checkCache}`);
     }
-
     this.timetables = this.timetables.filter(el => el.group !== group); // remove previous timetable
-
     this.timetables.push({
       group,
       time: Date.now()
@@ -477,41 +429,33 @@ class TimetableManager {
     utils_storage.setItem("timetable_" + group, timetable);
     return timetable;
   }
-
   async deleteTimetable(group) {
     this.timetables = this.timetables.filter(el => el.group !== group);
     utils_storage.deleteItem("timetable_" + group);
     return utils_storage.setItem("cached_timetables", this.timetables);
   }
-
   getCachedTimetables() {
     return this.timetables;
   }
-
   getCachedTime(group) {
     const timetable = this.timetables.find(el => el.group === group);
     return timetable?.time;
   }
-
   clearCache() {
     utils_storage.clear();
     this.timetables = [];
     this.groups = [];
     this.institutes = [];
   }
-
   getCachedInstitutes() {
     return this.institutes;
   }
-
   getCachedGroups() {
     return this.groups;
   }
-
   async updateTimetable(group) {
     return this.getTimetable(group, false);
   }
-
   searchGroups(query) {
     query = query.toLowerCase().replace("-", "");
     if (!this.groups) return [];
@@ -519,14 +463,11 @@ class TimetableManager {
       return group.toLowerCase().replace("-", "").startsWith(query);
     });
   }
-
 }
-
 function needsUpdate(timestamp) {
   if (!timestamp) return true;
   return navigator.onLine && Date.now() - UPDATE_PERIOD > timestamp;
 }
-
 /* harmony default export */ const managers_TimetableManager = (new TimetableManager());
 // EXTERNAL MODULE: ./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js
 var injectStylesIntoStyleTag = __webpack_require__(379);
@@ -581,20 +522,18 @@ var update = injectStylesIntoStyleTag_default()(RouteButton/* default */.Z, opti
 
 
 
-
 const RouteButton_RouteButton = ({
   text,
   to,
   className = ""
 }) => {
-  return /*#__PURE__*/react.createElement(react_router_dom/* Link */.rU, {
+  return /*#__PURE__*/react.createElement(react_router_dom_dist/* Link */.rU, {
     to: to,
     className: `route-button ${className}`
   }, /*#__PURE__*/react.createElement("div", {
     className: "route-button-text"
   }, text));
 };
-
 /* harmony default export */ const src_components_RouteButton = (RouteButton_RouteButton);
 // EXTERNAL MODULE: ./node_modules/react-search-panel/dist/index.esm.js
 var index_esm = __webpack_require__(850);
@@ -604,12 +543,11 @@ var index_esm = __webpack_require__(850);
 
 
 
-
 const InstituteSelection = () => {
   const [institutes, setInstitutes] = react.useState([]);
   const [isError, setIsError] = react.useState(false);
   const [search, setSearch] = react.useState("");
-  const navigate = (0,react_router/* useNavigate */.s0)();
+  const navigate = (0,dist/* useNavigate */.s0)();
   (0,react.useEffect)(() => {
     managers_TimetableManager.getInstitutes().then(institutes => {
       setInstitutes(institutes);
@@ -617,14 +555,12 @@ const InstituteSelection = () => {
       setIsError(true);
     });
   }, []);
-
   const handleSelect = choices => {
     const selected = choices[0];
     if (!selected) return;
     const group = selected.key;
     navigate(group);
   };
-
   const choices = managers_TimetableManager.searchGroups(search).map(g => ({
     key: g,
     description: g
@@ -649,7 +585,7 @@ const InstituteSelection = () => {
     float: true,
     width: "100%",
     maximumHeight: 250
-  }), /*#__PURE__*/react.createElement(react_router_dom/* Link */.rU, {
+  }), /*#__PURE__*/react.createElement(react_router_dom_dist/* Link */.rU, {
     to: '/settings',
     className: "settings-link"
   }, "\u2699\uFE0F")), institutes.map(institute => /*#__PURE__*/react.createElement(src_components_RouteButton, {
@@ -658,7 +594,6 @@ const InstituteSelection = () => {
     key: institute
   })));
 };
-
 /* harmony default export */ const routes_InstituteSelection = (InstituteSelection);
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/components/CategoryButton.scss
 var CategoryButton = __webpack_require__(535);
@@ -695,7 +630,6 @@ var CategoryButton_update = injectStylesIntoStyleTag_default()(CategoryButton/* 
 
 
 
-
 class CategoryButton_CategoryButton extends react.Component {
   constructor(props) {
     super(props);
@@ -703,7 +637,6 @@ class CategoryButton_CategoryButton extends react.Component {
       opened: props.opened ?? false
     };
   }
-
   render() {
     return /*#__PURE__*/react.createElement("div", {
       className: "category-button"
@@ -718,12 +651,9 @@ class CategoryButton_CategoryButton extends react.Component {
       className: "category-contents"
     }, this.props.contents));
   }
-
 }
-
 /* harmony default export */ const src_components_CategoryButton = (CategoryButton_CategoryButton);
 ;// CONCATENATED MODULE: ./src/routes/GroupSelection.js
-
 
 
 
@@ -737,7 +667,6 @@ class GroupSelection extends react.Component {
       isError: false
     };
   }
-
   render() {
     return /*#__PURE__*/react.createElement("div", {
       className: "group-selection"
@@ -755,30 +684,25 @@ class GroupSelection extends react.Component {
       className: "error"
     }, "\u041F\u043E\u043C\u0438\u043B\u043A\u0430 \u043F\u0440\u0438 \u043E\u0442\u0440\u0438\u043C\u0430\u043D\u043D\u0456 \u0434\u0430\u043D\u0438\u0445!"), this.getCategories());
   }
-
   componentDidMount() {
     this.fetchData(this.props.institute);
   }
-
   componentDidUpdate(prevProps) {
     if (this.props.institute !== prevProps.institute) {
       this.setState({
         groups: [] // clear
-
       });
+
       this.fetchData(this.props.institute);
     }
   }
-
   fetchData(institute) {
     managers_TimetableManager.getGroups(institute).then(groups => {
       const categories = new Set();
-
       for (let group of groups) {
         const category = group.split("-")[0];
         categories.add(category);
       }
-
       this.setState({
         groups,
         categories: Array.from(categories)
@@ -789,17 +713,14 @@ class GroupSelection extends react.Component {
       });
     });
   }
-
   getCategories() {
     if (!this.state.categories) return [];
     const categories = [];
-
     for (let category of this.state.categories) {
       const groups = this.state.groups.filter(el => el.split("-")[0] === category);
       const subcategories = new Set();
       groups.forEach(group => subcategories.add(getSubcategory(group)));
       const lists = [];
-
       for (let subcategory of Array.from(subcategories)) {
         lists.push(groups.filter(group => group.startsWith(subcategory)).map(group => /*#__PURE__*/react.createElement(src_components_RouteButton, {
           to: `/${group}`,
@@ -807,7 +728,6 @@ class GroupSelection extends react.Component {
           key: group
         })));
       }
-
       categories.push( /*#__PURE__*/react.createElement(src_components_CategoryButton, {
         key: category,
         text: category,
@@ -817,12 +737,9 @@ class GroupSelection extends react.Component {
         }, list))
       }));
     }
-
     return categories;
   }
-
 }
-
 function getSubcategory(group) {
   return group.substring(0, group.indexOf("-") + 2); // КН-1, КН-2 ...
 }
@@ -835,7 +752,6 @@ function getCurrentUADate() {
   const date = new Date(Date.now() + offset + getTimezoneOffset(LVIV_TIMEZONE));
   return date;
 }
-
 const getTimezoneOffset = (timeZone, date = new Date()) => {
   const tz = date.toLocaleString("en", {
     timeZone,
@@ -843,8 +759,9 @@ const getTimezoneOffset = (timeZone, date = new Date()) => {
   }).split(" ").slice(-1)[0];
   const utc = date.toUTCString();
   const dateString = utc.substring(0, utc.length - 4);
-  const offset = Date.parse(`${dateString} UTC`) - Date.parse(`${dateString} ${tz}`); // return UTC offset in millis
+  const offset = Date.parse(`${dateString} UTC`) - Date.parse(`${dateString} ${tz}`);
 
+  // return UTC offset in millis
   return offset;
 };
 // EXTERNAL MODULE: ./node_modules/classnames/index.js
@@ -887,18 +804,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 
-
-
 class TwoSideButton_TwoSideButton extends react.Component {
   constructor(props) {
     super(props);
-
     _defineProperty(this, "onResize", throttle(() => {
       this.setState({
         sliderStyles: this._calculateSliderStyles(this.state.side)
       });
     }, 250));
-
     this.state = {
       side: this.props.default ?? "one",
       sliderStyles: {
@@ -909,7 +822,6 @@ class TwoSideButton_TwoSideButton extends react.Component {
     this.oneRef = /*#__PURE__*/react.createRef();
     this.twoRef = /*#__PURE__*/react.createRef();
   }
-
   render() {
     return /*#__PURE__*/react.createElement("div", {
       className: "two-side-button"
@@ -934,48 +846,40 @@ class TwoSideButton_TwoSideButton extends react.Component {
       ref: this.twoRef
     }, this.props.two));
   }
-
   componentDidMount() {
     this.setState({
       sliderStyles: this._calculateSliderStyles(this.state.side)
     });
     window.addEventListener('resize', this.onResize);
   }
-
   componentWillUnmount() {
     window.removeEventListener('resize', this.onResize);
   }
-
   componentDidUpdate(prevProps, prevState) {
     if (this.props.default !== prevProps.default) {
       this.setState({
         side: this.props.default ?? "one"
       });
     }
-
     if (this.state.side !== prevState.side) {
       this.setState({
         sliderStyles: this._calculateSliderStyles(this.state.side)
       });
     }
   }
-
   select(side) {
     this.setState({
       side: side
     });
     if (this.props.onSelect) this.props.onSelect(side);
   }
-
   _calculateSliderStyles(side) {
     let el = null;
-
     if (side === "one") {
       el = this.oneRef.current;
     } else {
       el = this.twoRef.current;
     }
-
     if (!el) return {
       left: 0,
       right: "100%"
@@ -989,9 +893,7 @@ class TwoSideButton_TwoSideButton extends react.Component {
       right: `${right}px`
     };
   }
-
 }
-
 /* harmony default export */ const src_components_TwoSideButton = (TwoSideButton_TwoSideButton);
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/components/TimetableComponent.scss
 var TimetableComponent = __webpack_require__(340);
@@ -1046,101 +948,76 @@ function timeToDate(time) {
   date.setSeconds(0);
   return date;
 }
-
 function getWeekday(number) {
   switch (number) {
     case 1:
       return "Понеділок";
-
     case 2:
       return "Вівторок";
-
     case 3:
       return "Середа";
-
     case 4:
       return "Четвер";
-
     case 5:
       return "П'ятниця";
-
     case 6:
       return "Субота";
-
     case 7:
       return "Неділя";
-
     default:
       return "Не вдалося отримати день";
   }
 }
-
 function getHours(num) {
   switch (num) {
     case 1:
       return ["8:30", "10:05"];
-
     case 2:
       return ["10:20", "11:55"];
-
     case 3:
       return ["12:10", "13:45"];
-
     case 4:
       return ["14:15", "15:50"];
-
     case 5:
       return ["16:00", "17:35"];
-
     case 6:
       return ["17:40", "19:15"];
-
     case 7:
       return ["19:20", "20:55"];
-
     case 8:
       return ["21:00", "22:35"];
-
     default:
       return ["", ""];
   }
 }
-
 function findSize(elements) {
   let days = 5;
   let rows = 5;
-
   for (let element of elements) {
     if (element.day > days) days = element.day;
     if (element.position > rows) rows = element.position;
   }
-
   return {
     days: Math.min(days, 7),
     rows
   };
 }
-
 const TimetableComponent_TimetableComponent = ({
   elements,
   onReady
 }) => {
   const ref = (0,react.useRef)();
   const sizes = findSize(elements);
-
   const getActiveLesson = () => {
     let date = getCurrentUADate();
     let currentDay = date.getDay(); // 0 - Sunday
-
     if (currentDay === 0) currentDay = 7; // костиль
 
     let prevEnd = null;
-
     for (let i = 1; i < 9; i++) {
       // 1-8
       let endH = getHours(i)[1];
       let end = timeToDate(endH);
-
       if (date < end && (!prevEnd || date > prevEnd)) {
         return {
           day: currentDay,
@@ -1150,17 +1027,14 @@ const TimetableComponent_TimetableComponent = ({
         prevEnd = end;
       }
     }
-
     return {
       day: -1,
       num: -1
     };
   };
-
   const makeTable = (size, elements) => {
     const cells = [];
     let active = getActiveLesson();
-
     for (let i = 0; i < size.rows + 1; i++) {
       for (let j = 0; j < size.days + 1; j++) {
         // first row
@@ -1194,10 +1068,8 @@ const TimetableComponent_TimetableComponent = ({
         }
       }
     }
-
     return cells;
   };
-
   (0,react.useEffect)(() => {
     if (elements) onReady?.(ref.current);
   }, [elements]);
@@ -1206,12 +1078,10 @@ const TimetableComponent_TimetableComponent = ({
       timetable: true,
       "has-saturday": sizes.days === 6,
       "has-sunday": sizes.days === 7 // Не заздрю...
-
     }),
     ref: ref
   }, makeTable(sizes, elements));
 };
-
 const NumerationCell = ({
   num,
   time
@@ -1227,7 +1097,6 @@ const NumerationCell = ({
     className: "hours"
   }, /*#__PURE__*/react.createElement("div", null, time[0]), /*#__PURE__*/react.createElement("div", null, time[1])));
 };
-
 const EmptyCell = () => {
   return /*#__PURE__*/react.createElement("div", {
     className: classnames_default()({
@@ -1236,7 +1105,6 @@ const EmptyCell = () => {
     })
   });
 };
-
 const DayCell = ({
   weekday
 }) => {
@@ -1249,11 +1117,9 @@ const DayCell = ({
     className: "date"
   }, weekday));
 };
-
 class LessonCell extends react.Component {
   constructor(props) {
     super(props);
-
     TimetableComponent_defineProperty(this, "onAnimationEnd", event => {
       if (event.animationName === "fade-out") {
         this.setState({
@@ -1262,14 +1128,12 @@ class LessonCell extends react.Component {
         });
       }
     });
-
     this.state = {
       prevLesson: props.lesson,
       fadeIn: true,
       fadeOut: false
     };
   }
-
   render() {
     const {
       lesson,
@@ -1295,7 +1159,6 @@ class LessonCell extends react.Component {
       lesson: fadeOut ? prevLesson : lesson
     })));
   }
-
   componentDidUpdate(prevProps) {
     if (prevProps.lesson !== this.props.lesson) {
       this.setState({
@@ -1305,9 +1168,7 @@ class LessonCell extends react.Component {
       });
     }
   }
-
 }
-
 const LessonFragment = ({
   lesson
 }) => {
@@ -1333,10 +1194,8 @@ const LessonFragment = ({
     rel: "noopener"
   }, "\u041F\u043E\u0441\u0438\u043B\u0430\u043D\u043D\u044F")));
 };
-
 /* harmony default export */ const src_components_TimetableComponent = (TimetableComponent_TimetableComponent);
 ;// CONCATENATED MODULE: ./src/routes/Timetable.js
-
 
 
 
@@ -1352,21 +1211,17 @@ const Timetable = ({
   const [timetable, setTimetable] = react.useState([]);
   const [week, setWeek] = react.useState(getWeek() % 2 === 0 ? 2 : 1);
   const [isError, setIsError] = react.useState(false);
-  const navigate = (0,react_router/* useNavigate */.s0)();
-
+  const navigate = (0,dist/* useNavigate */.s0)();
   const setSubgroup = subgroup => {
     let hash = getHash();
     let path = hash.split("/");
-
     if (subgroup) {
       path[1] = subgroup;
     } else {
       path.splice(1, 1);
     }
-
     navigate(path.join("/"));
   };
-
   const updateTimetable = (checkCache = false) => {
     setIsError(false);
     setTimetable([]);
@@ -1376,7 +1231,6 @@ const Timetable = ({
       setIsError(true);
     });
   };
-
   (0,react.useEffect)(() => {
     updateTimetable(true);
   }, [group]);
@@ -1394,22 +1248,18 @@ const Timetable = ({
       lesson: el
     }));
   }, [timetable, subgroup, week]);
-
   const tryToScrollToCurrentDay = el => {
     // yeah, naming!
     const width = el.getBoundingClientRect().width;
     let currentDay = getCurrentUADate().getDay(); // 0 - Sunday
-
     if (currentDay === 0) currentDay = 7;
     const inTimetable = filteredTimetable.some(({
       day
     }) => Math.max(day, 5) >= currentDay);
-
     if (inTimetable) {
       el.scrollTo((currentDay - 1) * width, 0);
     }
   };
-
   const hasSubgroups = timetable.find(el => el.isFirstSubgroup !== el.isSecondSubgroup);
   const hasWeeks = timetable.find(el => el.isFirstWeek !== el.isSecondWeek);
   const time = managers_TimetableManager.getCachedTime(group);
@@ -1457,43 +1307,28 @@ const Timetable = ({
     className: "last-cached"
   }, time ? "Востаннє: " + new Date(time).toLocaleString() : "")));
 };
-
 function testWeek(lesson, week) {
   if (week === 1 && lesson.isFirstWeek) return true;
   if (week === 2 && lesson.isSecondWeek) return true;
   return false;
 }
-
 function testSubgroup(lesson, subgroup) {
   if (subgroup === 1 && lesson.isFirstSubgroup) return true;
   if (subgroup === 2 && lesson.isSecondSubgroup) return true;
   return false;
 }
-
 function getWeek() {
   const date = getCurrentUADate();
-  date.setHours(0, 0, 0, 0); // Thursday in current week decides the year.
-
-  date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7); // January 4 is always in week 1.
-
-  const week1 = new Date(date.getFullYear(), 0, 4); // Adjust to Thursday in week 1 and count number of weeks from date to week1.
-
+  date.setHours(0, 0, 0, 0);
+  // Thursday in current week decides the year.
+  date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
+  // January 4 is always in week 1.
+  const week1 = new Date(date.getFullYear(), 0, 4);
+  // Adjust to Thursday in week 1 and count number of weeks from date to week1.
   return 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
 }
-
 /* harmony default export */ const routes_Timetable = (Timetable);
-;// CONCATENATED MODULE: ./src/utils/hooks.js
-
-function useForceUpdate() {
-  const [, dispatch] = (0,react.useState)(Object.create(null)); // Turn dispatch(required_parameter) into dispatch().
-
-  const memoizedDispatch = (0,react.useCallback)(() => {
-    dispatch(Object.create(null));
-  }, [dispatch]);
-  return memoizedDispatch;
-}
 ;// CONCATENATED MODULE: ./src/routes/Settings.js
-
 
 
 
@@ -1528,12 +1363,11 @@ const Settings = () => {
     }
   }, "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u0438 \u0434\u0430\u043D\u0456")));
 };
-
 const TimetableFragment = ({
   cachedTimetable,
   onUpdate
 }) => {
-  const navigate = (0,react_router/* useNavigate */.s0)();
+  const navigate = (0,dist/* useNavigate */.s0)();
   return /*#__PURE__*/react.createElement("div", {
     className: "cached-timetable"
   }, /*#__PURE__*/react.createElement("div", {
@@ -1563,7 +1397,6 @@ const TimetableFragment = ({
     }
   }, "\u0412\u0438\u0434\u0430\u043B\u0438\u0442\u0438"));
 };
-
 /* harmony default export */ const routes_Settings = (Settings);
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/components/LoadingComponent.scss
 var LoadingComponent = __webpack_require__(778);
@@ -1599,7 +1432,6 @@ var LoadingComponent_update = injectStylesIntoStyleTag_default()(LoadingComponen
 ;// CONCATENATED MODULE: ./src/components/LoadingComponent.js
 
 
-
 const LoadingComponent_LoadingComponent = ({
   text
 }) => {
@@ -1607,7 +1439,6 @@ const LoadingComponent_LoadingComponent = ({
     className: "loading"
   }, text);
 };
-
 /* harmony default export */ const src_components_LoadingComponent = (LoadingComponent_LoadingComponent);
 ;// CONCATENATED MODULE: ./src/app.js
 
@@ -1621,50 +1452,44 @@ const LoadingComponent_LoadingComponent = ({
 
 
 const App = () => {
-  const location = (0,react_router/* useLocation */.TH)();
+  const location = (0,dist/* useLocation */.TH)();
   const hash = getHash(location);
+  const forceUpdate = useForceUpdate();
   let path = hash.split("/");
   let root = path[0];
   let content = null;
-
   if (root) {
     switch (hash.toLowerCase()) {
       case "settings":
         content = /*#__PURE__*/react.createElement(routes_Settings, null);
         break;
-
       default:
         break;
     }
-
     if (!content) {
       if (managers_TimetableManager.getCachedInstitutes().length === 0) {
         managers_TimetableManager.requestInstitutes().then(inst => {
-          undefined.forceUpdate();
+          forceUpdate();
         });
         content = /*#__PURE__*/react.createElement(src_components_LoadingComponent, {
           text: "\u041E\u0442\u0440\u0438\u043C\u0430\u043D\u043D\u044F \u0441\u043F\u0438\u0441\u043A\u0443 \u0456\u043D\u0441\u0442\u0438\u0442\u0443\u0442\u0456\u0432..."
         });
       }
-
       if (managers_TimetableManager.getCachedGroups().length === 0) {
         managers_TimetableManager.requestGroups().then(inst => {
-          undefined.forceUpdate();
+          forceUpdate();
         });
         content = /*#__PURE__*/react.createElement(src_components_LoadingComponent, {
           text: "\u041E\u0442\u0440\u0438\u043C\u0430\u043D\u043D\u044F \u0441\u043F\u0438\u0441\u043A\u0443 \u0433\u0440\u0443\u043F..."
         });
       }
-
       let institute = managers_TimetableManager.getCachedInstitutes().find(inst => inst.toLowerCase().trim() === root.toLowerCase());
-
       if (institute) {
         content = /*#__PURE__*/react.createElement(routes_GroupSelection, {
           institute: institute
         });
       } else {
         let group = managers_TimetableManager.getCachedGroups().find(gr => gr.toLowerCase().trim() === root.toLowerCase());
-
         if (group) {
           content = /*#__PURE__*/react.createElement(routes_Timetable, {
             group: group,
@@ -1674,19 +1499,15 @@ const App = () => {
       }
     }
   }
-
   if (!content) {
     content = /*#__PURE__*/react.createElement(routes_InstituteSelection, null);
   }
-
-  return /*#__PURE__*/react.createElement(react_router/* Routes */.Z5, null, /*#__PURE__*/react.createElement(react_router/* Route */.AW, {
+  return /*#__PURE__*/react.createElement(dist/* Routes */.Z5, null, /*#__PURE__*/react.createElement(dist/* Route */.AW, {
     path: "*",
     element: content
   }));
 };
-
-const AppWrapper = () => /*#__PURE__*/react.createElement(react_router_dom/* HashRouter */.UT, null, /*#__PURE__*/react.createElement(App, null));
-
+const AppWrapper = () => /*#__PURE__*/react.createElement(react_router_dom_dist/* HashRouter */.UT, null, /*#__PURE__*/react.createElement(App, null));
 /* harmony default export */ const app = (AppWrapper);
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/styles/index.scss
 var styles = __webpack_require__(61);
@@ -1728,16 +1549,15 @@ var styles_update = injectStylesIntoStyleTag_default()(styles/* default */.Z, st
 managers_TimetableManager.init().then(() => {
   react_dom.render( /*#__PURE__*/react.createElement(app, null), document.getElementById('App'));
 });
-
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js').then(registration => {//console.log('SW registered: ', registration);
+    navigator.serviceWorker.register('./service-worker.js').then(registration => {
+      //console.log('SW registered: ', registration);
     }).catch(registrationError => {
       console.log('SW registration failed: ', registrationError);
     });
   });
 }
-
 window.timetable = managers_TimetableManager;
 
 /***/ }),
@@ -1948,6 +1768,36 @@ ___CSS_LOADER_EXPORT___.push([module.id, ":root{--textColor: black;--textHoverCo
 /******/ 		};
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/create fake namespace object */
+/******/ 	(() => {
+/******/ 		var getProto = Object.getPrototypeOf ? (obj) => (Object.getPrototypeOf(obj)) : (obj) => (obj.__proto__);
+/******/ 		var leafPrototypes;
+/******/ 		// create a fake namespace object
+/******/ 		// mode & 1: value is a module id, require it
+/******/ 		// mode & 2: merge all properties of value into the ns
+/******/ 		// mode & 4: return value when already ns object
+/******/ 		// mode & 16: return value when it's Promise-like
+/******/ 		// mode & 8|1: behave like require
+/******/ 		__webpack_require__.t = function(value, mode) {
+/******/ 			if(mode & 1) value = this(value);
+/******/ 			if(mode & 8) return value;
+/******/ 			if(typeof value === 'object' && value) {
+/******/ 				if((mode & 4) && value.__esModule) return value;
+/******/ 				if((mode & 16) && typeof value.then === 'function') return value;
+/******/ 			}
+/******/ 			var ns = Object.create(null);
+/******/ 			__webpack_require__.r(ns);
+/******/ 			var def = {};
+/******/ 			leafPrototypes = leafPrototypes || [null, getProto({}), getProto([]), getProto(getProto)];
+/******/ 			for(var current = mode & 2 && value; typeof current == 'object' && !~leafPrototypes.indexOf(current); current = getProto(current)) {
+/******/ 				Object.getOwnPropertyNames(current).forEach((key) => (def[key] = () => (value[key])));
+/******/ 			}
+/******/ 			def['default'] = () => (value);
+/******/ 			__webpack_require__.d(ns, def);
+/******/ 			return ns;
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -1975,6 +1825,17 @@ ___CSS_LOADER_EXPORT___.push([module.id, ":root{--textColor: black;--textHoverCo
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
@@ -2030,12 +1891,17 @@ ___CSS_LOADER_EXPORT___.push([module.id, ":root{--textColor: black;--textHoverCo
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/nonce */
+/******/ 	(() => {
+/******/ 		__webpack_require__.nc = undefined;
+/******/ 	})();
+/******/ 	
 /************************************************************************/
 /******/ 	
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [751], () => (__webpack_require__(587)))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [258], () => (__webpack_require__(587)))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()
