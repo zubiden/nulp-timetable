@@ -7,10 +7,10 @@
     "theme_color": "#fff",
     "icons": [
     	{
-		    "src": "./icons/favicon-32x32.png",
-		    "sizes": "32x32",
-		    "type": "image/png"
-		},
+	    "src": "./icons/favicon-32x32.png",
+	    "sizes": "32x32",
+	    "type": "image/png"
+	},
         {
             "src": "./icons/shortcut-192x192.png",
             "sizes": "192x192",
@@ -26,5 +26,5 @@
             "sizes": "1460x1460",
             "type": "image/svg+xml"
         }
-	]
+    ]
 }
