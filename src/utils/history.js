@@ -1,6 +1,10 @@
 import {createBrowserHistory} from "history";
 
-const HISTORY = createBrowserHistory();
+let HISTORY = createBrowserHistory();
+
+export function replaceHistory(newHistory) {
+	HISTORY = newHistory;
+}
 
 export function setSearchParameters(paramsObject) {
 	const url = new URL(window.location.href);
@@ -26,7 +30,7 @@ export function addSearchParameters(paramsObject, overwrite=true) {
 
 export function replaceHistoryState(newUrl) {
 	const url = new URL(newUrl);
-	const path = url.pathname + url.search+url.hash;
+	const path = url.pathname + url.search + url.hash;
 	HISTORY.replace(path, {})
 }
 

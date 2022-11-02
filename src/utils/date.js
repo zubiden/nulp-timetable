@@ -6,7 +6,7 @@ export function getCurrentUADate() {
     return date;
 }
 
-const getTimezoneOffset = (timeZone, date = new Date()) => {
+export const getTimezoneOffset = (timeZone, date = new Date()) => {
     const tz = date.toLocaleString("en", { timeZone, timeStyle: "long" }).split(" ").slice(-1)[0];
     const utc = date.toUTCString();
     const dateString = utc.substring(0,utc.length - 4);

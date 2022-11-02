@@ -201,7 +201,7 @@ function tryToGetType(location) {
 	return "lecture";
 }
 
-function dayToNumber(day) {
+export function dayToNumber(day) {
 	switch(day?.toLowerCase()) {
 		case "пн":
 			return 1;
