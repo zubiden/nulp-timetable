@@ -11,6 +11,16 @@ html, body {
     position: relative;
 }
 
+.notice {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+
+    padding: 1rem;
+    color: var(--textColor);
+}
 
 .grid-center {
     display: grid;

@@ -62,9 +62,18 @@ const App = () => {
         content = <InstituteSelection />;
     }
 
+    const wrappedContent = (
+        <>
+            <div className="notice">
+                Нова версія розкладу знаходиться <a href="https://lpnu.pp.ua">за цим посиланням</a>
+            </div>
+            {content}
+        </>
+    );
+
     return (
         <Routes>
-            <Route path="*" element={content} />
+            <Route path="*" element={wrappedContent} />
         </Routes>
     )
 }
