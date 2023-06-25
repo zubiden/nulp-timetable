@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { HashRouter, Routes, Route, useLocation } from "react-router-dom"
 
 import { getHash } from "./utils/history"
@@ -12,10 +12,16 @@ import Settings from "./routes/Settings"
 import LoadingComponent from "./components/LoadingComponent"
 import TimetableManager from "./managers/TimetableManager"
 
+const REDIRECT_URL = 'https://lpnu.pp.ua';
+
 const App = () => {
     const location = useLocation();
     const hash = getHash(location);
     const forceUpdate = useForceUpdate();
+
+    useEffect(() => {
+        window.location.replace(REDIRECT_URL);
+    }, [])
 
     let path = hash.split("/");
     let root = path[0];
@@ -65,7 +71,7 @@ const App = () => {
     const wrappedContent = (
         <>
             <div className="notice">
-                Нова версія розкладу знаходиться <a href="https://lpnu.pp.ua">за цим посиланням</a>
+                Нова версія розкладу знаходиться <a href={REDIRECT_URL}>за цим посиланням</a>
             </div>
             {content}
         </>
