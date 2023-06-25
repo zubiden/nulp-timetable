@@ -1457,10 +1457,14 @@ const LoadingComponent_LoadingComponent = ({
 
 
 
+const REDIRECT_URL = 'https://lpnu.pp.ua';
 const App = () => {
   const location = (0,dist/* useLocation */.TH)();
   const hash = getHash(location);
   const forceUpdate = useForceUpdate();
+  (0,react.useEffect)(() => {
+    location.href.replace(REDIRECT_URL);
+  }, []);
   let path = hash.split("/");
   let root = path[0];
   let content = null;
@@ -1511,7 +1515,7 @@ const App = () => {
   const wrappedContent = /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement("div", {
     className: "notice"
   }, "\u041D\u043E\u0432\u0430 \u0432\u0435\u0440\u0441\u0456\u044F \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u0443 \u0437\u043D\u0430\u0445\u043E\u0434\u0438\u0442\u044C\u0441\u044F ", /*#__PURE__*/react.createElement("a", {
-    href: "https://lpnu.pp.ua"
+    href: REDIRECT_URL
   }, "\u0437\u0430 \u0446\u0438\u043C \u043F\u043E\u0441\u0438\u043B\u0430\u043D\u043D\u044F\u043C")), content);
   return /*#__PURE__*/react.createElement(dist/* Routes */.Z5, null, /*#__PURE__*/react.createElement(dist/* Route */.AW, {
     path: "*",
