@@ -1463,7 +1463,7 @@ const App = () => {
   const hash = getHash(location);
   const forceUpdate = useForceUpdate();
   (0,react.useEffect)(() => {
-    location.href.replace(REDIRECT_URL);
+    location.replace(REDIRECT_URL);
   }, []);
   let path = hash.split("/");
   let root = path[0];
